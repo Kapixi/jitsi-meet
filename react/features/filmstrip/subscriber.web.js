@@ -12,7 +12,7 @@ import { setHorizontalViewDimensions, setTileViewDimensions } from './actions.we
  */
 StateListenerRegistry.register(
     /* selector */ state => state['features/base/participants'].length,
-    /* listener */ (numberOfParticipants, store) => {
+    /* listener */(numberOfParticipants, store) => {
         const state = store.getState();
 
         if (shouldDisplayTileView(state)) {
@@ -42,33 +42,33 @@ StateListenerRegistry.register(
  */
 StateListenerRegistry.register(
     /* selector */ state => getCurrentLayout(state),
-    /* listener */ (layout, store) => {
+    /* listener */(layout, store) => {
         const state = store.getState();
 
         switch (layout) {
-        case LAYOUTS.TILE_VIEW: {
-            const { clientHeight, clientWidth } = state['features/base/responsive-ui'];
-            const { isOpen } = state['features/chat'];
+            case LAYOUTS.TILE_VIEW: {
+                const { clientHeight, clientWidth } = state['features/base/responsive-ui'];
+                const { isOpen } = state['features/chat'];
 
-            store.dispatch(
-                setTileViewDimensions(
-                    getTileViewGridDimensions(state),
-                    {
-                        clientHeight,
-                        clientWidth
-                    },
-                    isOpen
-                )
-            );
-            break;
-        }
-        case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW:
-            store.dispatch(setHorizontalViewDimensions(state['features/base/responsive-ui'].clientHeight));
-            break;
-        case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
-            // Once the thumbnails are reactified this should be moved there too.
-            Filmstrip.resizeThumbnailsForVerticalView();
-            break;
+                store.dispatch(
+                    setTileViewDimensions(
+                        getTileViewGridDimensions(state),
+                        {
+                            clientHeight,
+                            clientWidth
+                        },
+                        isOpen
+                    )
+                );
+                break;
+            }
+            case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW:
+                store.dispatch(setHorizontalViewDimensions(state['features/base/responsive-ui'].clientHeight));
+                break;
+            case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
+                // Once the thumbnails are reactified this should be moved there too.
+                Filmstrip.resizeThumbnailsForVerticalView();
+                break;
         }
     });
 
@@ -77,7 +77,7 @@ StateListenerRegistry.register(
  */
 StateListenerRegistry.register(
     /* selector */ state => state['features/large-video'].participantId,
-    /* listener */ (participantId, store, oldParticipantId) => {
+    /* listener */(participantId, store, oldParticipantId) => {
         const newThumbnail = VideoLayout.getSmallVideo(participantId);
         const oldThumbnail = VideoLayout.getSmallVideo(oldParticipantId);
 
@@ -96,7 +96,7 @@ StateListenerRegistry.register(
  */
 StateListenerRegistry.register(
     /* selector */ state => state['features/chat'].isOpen,
-    /* listener */ (isChatOpen, store) => {
+    /* listener */(isChatOpen, store) => {
         const state = store.getState();
 
         if (isChatOpen) {

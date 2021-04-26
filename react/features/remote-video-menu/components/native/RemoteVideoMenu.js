@@ -99,15 +99,15 @@ class RemoteVideoMenu extends PureComponent<Props> {
 
         return (
             <BottomSheet
-                onCancel = { this._onCancel }
-                renderHeader = { this._renderMenuHeader }>
-                { !_disableRemoteMute && <MuteButton { ...buttonProps } /> }
-                { !_disableKick && <KickButton { ...buttonProps } /> }
-                <GrantModeratorButton { ...buttonProps } />
-                <PinButton { ...buttonProps } />
-                <PrivateMessageButton { ...buttonProps } />
-                <MuteEveryoneElseButton { ...buttonProps } />
-                <ConnectionStatusButton { ...buttonProps } />
+                onCancel={this._onCancel}
+                renderHeader={this._renderMenuHeader}>
+                { !_disableRemoteMute && <MuteButton {...buttonProps} />}
+                { !_disableKick && <KickButton {...buttonProps} />}
+                {/* <GrantModeratorButton { ...buttonProps } /> */}
+                <PinButton {...buttonProps} />
+                <PrivateMessageButton {...buttonProps} />
+                <MuteEveryoneElseButton {...buttonProps} />
+                <ConnectionStatusButton {...buttonProps} />
             </BottomSheet>
         );
     }
@@ -142,14 +142,14 @@ class RemoteVideoMenu extends PureComponent<Props> {
 
         return (
             <View
-                style = { [
+                style={[
                     _bottomSheetStyles.sheet,
-                    styles.participantNameContainer ] }>
+                    styles.participantNameContainer]}>
                 <Avatar
-                    participantId = { participant.id }
-                    size = { AVATAR_SIZE } />
-                <Text style = { styles.participantNameLabel }>
-                    { this.props._participantDisplayName }
+                    participantId={participant.id}
+                    size={AVATAR_SIZE} />
+                <Text style={styles.participantNameLabel}>
+                    {this.props._participantDisplayName}
                 </Text>
             </View>
         );

@@ -23,6 +23,10 @@
      * Move status icons to the bottom right of the thumbnail.
      */
     .videocontainer__toolbar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: -10px;
         /**
          * FIXME: disable pointer to allow any elements moved below to still
          * be clickable. The real fix would to make sure those moved elements
@@ -54,6 +58,21 @@
     .remote-video-menu-trigger,
     .indicator-icon-container {
         transform: translate3d(0, 0, 0);
+
+    }
+
+    .remote-video-menu-trigger {
+        transform: rotate(90deg) !important;
+        border-radius: 50%;
+        border: 1px solid white;
+        width: 18px;
+        height: 18px;
+        left: -18% !important;
+        bottom: -30% !important;
+        margin-left: 0px !important;
+        .jitsi-icon  {
+            margin-top: 2px !important;
+        }
     }
 
     .indicator-icon-container {
@@ -71,7 +90,7 @@
     .remotevideomenu,
     .remote-video-menu-trigger {
         bottom: 0;
-        left: 0;
+        left: 45%;
         top: auto;
         right: auto;
     }

@@ -74,22 +74,23 @@ class StatusIndicators extends Component<Props> {
         let tooltipPosition;
 
         switch (_currentLayout) {
-        case LAYOUTS.TILE_VIEW:
-            tooltipPosition = 'right';
-            break;
-        case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
-            tooltipPosition = 'left';
-            break;
-        default:
-            tooltipPosition = 'top';
+            case LAYOUTS.TILE_VIEW:
+                tooltipPosition = 'right';
+                break;
+            case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
+                tooltipPosition = 'left';
+                break;
+            default:
+                tooltipPosition = 'top';
         }
 
         return (
             <div>
-                { _showAudioMutedIndicator ? <AudioMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
-                { _showScreenShareIndicator ? <ScreenShareIndicator tooltipPosition = { tooltipPosition } /> : null }
-                { _showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition = { tooltipPosition } /> : null }
-                { _showModeratorIndicator ? <ModeratorIndicator tooltipPosition = { tooltipPosition } /> : null }
+                { _showAudioMutedIndicator ? <AudioMutedIndicator tooltipPosition={tooltipPosition} /> : null}
+                {_showAudioMutedIndicator && _showVideoMutedIndicator && <div style={{ height: 5 }} />}
+                {/* { _showScreenShareIndicator ? <ScreenShareIndicator tooltipPosition={tooltipPosition} /> : null} */}
+                { _showVideoMutedIndicator ? <VideoMutedIndicator tooltipPosition={tooltipPosition} /> : null}
+                {/* { _showModeratorIndicator ? <ModeratorIndicator tooltipPosition = { tooltipPosition } /> : null } */}
             </div>
         );
     }

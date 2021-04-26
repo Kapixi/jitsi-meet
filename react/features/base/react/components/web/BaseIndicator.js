@@ -102,18 +102,18 @@ class BaseIndicator extends Component<Props> {
         }
 
         return (
-            <div className = 'indicator-container'>
+            <div className='indicator-container'>
                 <Tooltip
-                    content = { t(tooltipKey) }
-                    position = { tooltipPosition }>
+                    content={t(tooltipKey)}
+                    position={tooltipPosition}>
                     <span
-                        className = { iconContainerClassName }
-                        id = { id }>
+                        className={iconContainerClassName}
+                        id={id}>
                         <Icon
-                            className = { iconClassName }
-                            id = { iconId }
-                            src = { icon }
-                            style = { style } />
+                            className={iconClassName}
+                            id={iconId}
+                            src={icon}
+                            style={style} />
                     </span>
                 </Tooltip>
             </div>

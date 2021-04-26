@@ -182,16 +182,16 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
 
         return (
             <Popover
-                className = { rootClassNames }
-                content = { this._renderStatisticsTable() }
-                disablePopover = { !this.props.enableStatsDisplay }
-                position = { this.props.statsPopoverPosition }>
-                <div className = 'popover-trigger'>
+                className={rootClassNames}
+                content={this._renderStatisticsTable()}
+                disablePopover={!this.props.enableStatsDisplay}
+                position={this.props.statsPopoverPosition}>
+                <div className='popover-trigger'>
                     <div
-                        className = { indicatorContainerClassNames }
-                        style = {{ fontSize: this.props.iconSize }}>
-                        <div className = 'connection indicatoricon'>
-                            { this._renderIcon() }
+                        className={indicatorContainerClassNames}
+                        style={{ fontSize: this.props.iconSize }}>
+                        <div className='connection indicatoricon'>
+                            {this._renderIcon()}
                         </div>
                     </div>
                 </div>
@@ -232,28 +232,28 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
         let tipKey;
 
         switch (this.props._connectionStatus) {
-        case JitsiParticipantConnectionStatus.INTERRUPTED:
-            tipKey = 'connectionindicator.quality.lost';
-            break;
+            case JitsiParticipantConnectionStatus.INTERRUPTED:
+                tipKey = 'connectionindicator.quality.lost';
+                break;
 
-        case JitsiParticipantConnectionStatus.INACTIVE:
-            tipKey = 'connectionindicator.quality.inactive';
-            break;
+            case JitsiParticipantConnectionStatus.INACTIVE:
+                tipKey = 'connectionindicator.quality.inactive';
+                break;
 
-        default: {
-            const { percent } = this.state.stats;
+            default: {
+                const { percent } = this.state.stats;
 
-            if (typeof percent === 'undefined') {
-                // If percentage is undefined then there are no stats available
-                // yet, likely because only a local connection has been
-                // established so far. Assume a strong connection to start.
-                tipKey = 'connectionindicator.quality.good';
-            } else {
-                const config = this._getDisplayConfiguration(percent);
+                if (typeof percent === 'undefined') {
+                    // If percentage is undefined then there are no stats available
+                    // yet, likely because only a local connection has been
+                    // established so far. Assume a strong connection to start.
+                    tipKey = 'connectionindicator.quality.good';
+                } else {
+                    const config = this._getDisplayConfiguration(percent);
 
-                tipKey = config.tip;
+                    tipKey = config.tip;
+                }
             }
-        }
         }
 
         return this.props.t(tipKey);
@@ -314,11 +314,11 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
         if (this.props._connectionStatus
             === JitsiParticipantConnectionStatus.INACTIVE) {
             return (
-                <span className = 'connection_ninja'>
+                <span className='connection_ninja'>
                     <Icon
-                        className = 'icon-ninja'
-                        size = '1.5em'
-                        src = { IconConnectionInactive } />
+                        className='icon-ninja'
+                        size='1.5em'
+                        src={IconConnectionInactive} />
                 </span>
             );
         }
@@ -343,21 +343,21 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
 
         return [
             <span
-                className = { emptyIconWrapperClassName }
-                key = 'icon-empty'>
+                className={emptyIconWrapperClassName}
+                key='icon-empty'>
                 <Icon
-                    className = 'icon-gsm-bars'
-                    size = '1em'
-                    src = { IconConnectionActive } />
+                    className='icon-gsm-bars'
+                    size='1em'
+                    src={IconConnectionActive} />
             </span>,
             <span
-                className = 'connection_full'
-                key = 'icon-full'
-                style = {{ width: iconWidth }}>
+                className='connection_full'
+                key='icon-full'
+                style={{ width: iconWidth }}>
                 <Icon
-                    className = 'icon-gsm-bars'
-                    size = '1em'
-                    src = { IconConnectionActive } />
+                    className='icon-gsm-bars'
+                    size='1em'
+                    src={IconConnectionActive} />
             </span>
         ];
     }
@@ -385,27 +385,27 @@ class ConnectionIndicator extends AbstractConnectionIndicator<Props, State> {
 
         return (
             <ConnectionStatsTable
-                audioSsrc = { this.props.audioSsrc }
-                bandwidth = { bandwidth }
-                bitrate = { bitrate }
-                bridgeCount = { bridgeCount }
-                codec = { codec }
-                connectionSummary = { this._getConnectionStatusTip() }
-                e2eRtt = { e2eRtt }
-                enableSaveLogs = { this.props.enableSaveLogs }
-                framerate = { framerate }
-                isLocalVideo = { this.props.isLocalVideo }
-                maxEnabledResolution = { maxEnabledResolution }
-                onSaveLogs = { this.props._onSaveLogs }
-                onShowMore = { this._onToggleShowMore }
-                packetLoss = { packetLoss }
-                participantId = { this.props.participantId }
-                region = { region }
-                resolution = { resolution }
-                serverRegion = { serverRegion }
-                shouldShowMore = { this.state.showMoreStats }
-                transport = { transport }
-                videoSsrc = { this.props.videoSsrc } />
+                audioSsrc={this.props.audioSsrc}
+                bandwidth={bandwidth}
+                bitrate={bitrate}
+                bridgeCount={bridgeCount}
+                codec={codec}
+                connectionSummary={this._getConnectionStatusTip()}
+                e2eRtt={e2eRtt}
+                enableSaveLogs={this.props.enableSaveLogs}
+                framerate={framerate}
+                isLocalVideo={this.props.isLocalVideo}
+                maxEnabledResolution={maxEnabledResolution}
+                onSaveLogs={this.props._onSaveLogs}
+                onShowMore={this._onToggleShowMore}
+                packetLoss={packetLoss}
+                participantId={this.props.participantId}
+                region={region}
+                resolution={resolution}
+                serverRegion={serverRegion}
+                shouldShowMore={this.state.showMoreStats}
+                transport={transport}
+                videoSsrc={this.props.videoSsrc} />
         );
     }
 }

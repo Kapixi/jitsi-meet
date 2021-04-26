@@ -139,15 +139,15 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
 
         return (
             <Popover
-                content = { content }
-                onPopoverOpen = { this._onShowRemoteMenu }
-                position = { this.props._menuPosition }>
+                content={content}
+                onPopoverOpen={this._onShowRemoteMenu}
+                position={this.props._menuPosition}>
                 <span
-                    className = 'popover-trigger remote-video-menu-trigger'>
+                    className='popover-trigger remote-video-menu-trigger'>
                     <Icon
-                        size = '1em'
-                        src = { IconMenuThumb }
-                        title = 'Remote user controls' />
+                        size='1em'
+                        src={IconMenuThumb}
+                        title='Remote user controls' />
                 </span>
             </Popover>
         );
@@ -191,28 +191,29 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
             if (!_disableRemoteMute) {
                 buttons.push(
                     <MuteButton
-                        isAudioMuted = { _isAudioMuted }
-                        key = 'mute'
-                        participantID = { participantID } />
+                        isAudioMuted={_isAudioMuted}
+                        key='mute'
+                        participantID={participantID} />
                 );
                 buttons.push(
                     <MuteEveryoneElseButton
-                        key = 'mute-others'
-                        participantID = { participantID } />
+                        key='mute-others'
+                        participantID={participantID} />
                 );
+
             }
 
-            buttons.push(
-                <GrantModeratorButton
-                    key = 'grant-moderator'
-                    participantID = { participantID } />
-            );
+            // buttons.push(
+            //     <GrantModeratorButton
+            //         key = 'grant-moderator'
+            //         participantID = { participantID } />
+            // );
 
             if (!_disableKick) {
                 buttons.push(
                     <KickButton
-                        key = 'kick'
-                        participantID = { participantID } />
+                        key='kick'
+                        participantID={participantID} />
                 );
             }
         }
@@ -228,32 +229,32 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
 
             buttons.push(
                 <RemoteControlButton
-                    key = 'remote-control'
-                    onClick = { onRemoteControlToggle }
-                    participantID = { participantID }
-                    remoteControlState = { _remoteControlState } />
+                    key='remote-control'
+                    onClick={onRemoteControlToggle}
+                    participantID={participantID}
+                    remoteControlState={_remoteControlState} />
             );
         }
 
         buttons.push(
             <PrivateMessageMenuButton
-                key = 'privateMessage'
-                participantID = { participantID } />
+                key='privateMessage'
+                participantID={participantID} />
         );
 
         if (onVolumeChange) {
             buttons.push(
                 <VolumeSlider
-                    initialValue = { initialVolumeValue }
-                    key = 'volume-slider'
-                    onChange = { onVolumeChange } />
+                    initialValue={initialVolumeValue}
+                    key='volume-slider'
+                    onChange={onVolumeChange} />
             );
         }
 
         if (buttons.length > 0) {
             return (
-                <RemoteVideoMenu id = { participantID }>
-                    { buttons }
+                <RemoteVideoMenu id={participantID}>
+                    { buttons}
                 </RemoteVideoMenu>
             );
         }
@@ -292,7 +293,7 @@ function _mapStateToProps(state, ownProps) {
     const activeParticipant = requestedParticipant || controlled;
 
     if (_supportsRemoteControl
-            && ((!active && !_isRemoteControlSessionActive) || activeParticipant === participantID)) {
+        && ((!active && !_isRemoteControlSessionActive) || activeParticipant === participantID)) {
         if (requestedParticipant === participantID) {
             _remoteControlState = REMOTE_CONTROL_MENU_STATES.REQUESTING;
         } else if (controlled) {
@@ -306,14 +307,14 @@ function _mapStateToProps(state, ownProps) {
     let _menuPosition;
 
     switch (currentLayout) {
-    case LAYOUTS.TILE_VIEW:
-        _menuPosition = 'left top';
-        break;
-    case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
-        _menuPosition = 'left bottom';
-        break;
-    default:
-        _menuPosition = 'top center';
+        case LAYOUTS.TILE_VIEW:
+            _menuPosition = 'left top';
+            break;
+        case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
+            _menuPosition = 'left bottom';
+            break;
+        default:
+            _menuPosition = 'top center';
     }
 
     return {

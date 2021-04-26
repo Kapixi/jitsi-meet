@@ -50,7 +50,7 @@
     &__toolbar,
     &__toptoolbar {
         position: absolute;
-        left: 0;
+        // left: 0;
         pointer-events: none;
         z-index: $zindex10;
         width: 100%;
@@ -75,11 +75,53 @@
             float: left;
             pointer-events: all;
         }
+
+        .videoMuted {
+            // position: absolute;
+            // top: -62;
+            // right: -3;
+            margin-right: 0px !important;
+            width: 20px !important;
+            height: 20px !important;
+            background-color: #333333;
+            border: 1px solid #fff !important;
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            svg {
+                fill: #20b7ae;
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        .audioMuted {
+            // position: absolute;
+            // top: -35;
+            // right: -3;
+            margin-right: 0px !important;
+            width: 20px !important;
+            height: 20px !important;
+            background-color: #333333;
+            border: 1px solid #fff !important;
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            svg {
+                fill: #20b7ae; 
+                width: 12px;
+                height: 12px;
+            }
+        }
     }
 
     &__toolbar {
-        bottom: 0;
-        height: $thumbnailToolbarHeight;
+        height: 100%;
+        width: $thumbnailToolbarHeight;
+        right: 0;
+        top: 0;
         padding: 0 5px 0 5px;
     }
 
@@ -91,7 +133,8 @@
          * Override text-align center as icons need to be left justified.
          */
         text-align: left;
-
+        display: flex;
+        justify-content: center;
         /**
          * Intentionally use margin on the icon itself as AtlasKit InlineDialog
          * positioning depends on the trigger (indicator icon).
@@ -166,7 +209,10 @@
         }
 
         .hide-connection-indicator {
-            display: none;
+            display: none !important;
+        }
+        .show-connection-indicator {
+            display: none !important;
         }
     }
 
@@ -187,6 +233,34 @@
             margin-left: $sidebarWidth;
             width: calc(100% - #{$sidebarWidth});
         }
+    }
+
+    video {
+        border-radius: 50% !important;
+    }
+    audio {
+        border-radius: 50% !important;
+    }
+
+    .videocontainer__background {
+        border-radius: 50% !important;
+        background-color: #333 !important;
+    }
+
+    .videocontainer__hoverOverlay {
+        border-radius: 50% !important;
+    }
+    
+}
+
+
+#largeVideoWrapper {
+   
+    video {
+        border-radius: 0px !important;
+    }
+    audio {
+        border-radius: 0px !important;
     }
 }
 
@@ -303,6 +377,25 @@
     cursor: text;
 }
 
+#localVideoContainer {
+    // overflow: hidden;
+    border-radius: 50%;
+}
+
+#localVideoWrapper {
+    border-radius: 50% !important;
+    video {
+        border-radius: 50% !important;
+    }
+    audio {
+        border-radius: 50% !important;
+    }
+}
+
+#localVideoWrapper {
+    border-radius: 50% !important;
+}
+
 .videocontainer .displayname {
     pointer-events: none;
     padding: 0 3px 0 3px;
@@ -371,7 +464,11 @@
 }
 
 .raisehandindicator {
-  background: $raiseHandBg;
+  background: #20b7ae !important;
+}
+
+#dominantspeakerindicator {
+    background: #20b7ae !important;
 }
 
 .connection-indicator {
@@ -403,8 +500,9 @@
 {
     display: inline-block;
     position: absolute;
-    top: 0px;
-    right: 0;
+    // top: 0px;
+    // right: 0;
+    bottom: 0px;
     z-index: $zindex2;
     width: 18px;
     height: 13px;
@@ -441,7 +539,7 @@
         opacity: 0;
         display: inline-block;
         @include circle(5px);
-        background: $audioLevelShadow;
+        background: #066861;
         margin: 1px 0 1px 0;
         transition: opacity .25s ease-in-out;
         -moz-transition: opacity .25s ease-in-out;
@@ -455,9 +553,9 @@
         width: 5px;
         height: 5px;
         border-radius: 50%;
-        -webkit-filter: blur(0.5px);
-        filter: blur(0.5px);
-        background: $audioLevelBg;
+        // -webkit-filter: blur(0.5px);
+        // filter: blur(0.5px);
+        background: #20b7ae;
     }
 }
 
@@ -524,11 +622,11 @@
 }
 
 .avatar-container {
-    @include maxSize(60px);
+    // @include maxSize(60px);
     @include absoluteAligning();
     display: flex;
     justify-content: center;
-    height: 50%;
+    height: 100%;
     width: auto;
     overflow: hidden;
 

@@ -215,10 +215,10 @@ export default class SmallVideo {
         }
 
         ReactDOM.render(
-            <Provider store = { APP.store }>
-                <I18nextProvider i18n = { i18next }>
+            <Provider store={APP.store}>
+                <I18nextProvider i18n={i18next}>
                     <StatusIndicators
-                        participantID = { this.id } />
+                        participantID={this.id} />
                 </I18nextProvider>
             </Provider>,
             statusBarContainer);
@@ -265,7 +265,7 @@ export default class SmallVideo {
         const audioLevelContainer = this._getAudioLevelContainer();
 
         if (audioLevelContainer) {
-            ReactDOM.render(<AudioLevelIndicator audioLevel = { lvl }/>, audioLevelContainer);
+            ReactDOM.render(<AudioLevelIndicator audioLevel={lvl} />, audioLevelContainer);
         }
     }
 
@@ -326,9 +326,9 @@ export default class SmallVideo {
 
         if (displayNameContainer) {
             ReactDOM.render(
-                <Provider store = { APP.store }>
-                    <I18nextProvider i18n = { i18next }>
-                        <DisplayName { ...props } />
+                <Provider store={APP.store}>
+                    <I18nextProvider i18n={i18next}>
+                        <DisplayName {...props} />
                     </I18nextProvider>
                 </Provider>,
                 displayNameContainer);
@@ -487,27 +487,27 @@ export default class SmallVideo {
         this.displayMode = this.selectDisplayMode(displayModeInput);
 
         switch (this.displayMode) {
-        case DISPLAY_AVATAR_WITH_NAME:
-            displayModeString = 'avatar-with-name';
-            this.$container.addClass('display-avatar-with-name');
-            break;
-        case DISPLAY_BLACKNESS_WITH_NAME:
-            displayModeString = 'blackness-with-name';
-            this.$container.addClass('display-name-on-black');
-            break;
-        case DISPLAY_VIDEO:
-            displayModeString = 'video';
-            this.$container.addClass('display-video');
-            break;
-        case DISPLAY_VIDEO_WITH_NAME:
-            displayModeString = 'video-with-name';
-            this.$container.addClass('display-name-on-video');
-            break;
-        case DISPLAY_AVATAR:
-        default:
-            displayModeString = 'avatar';
-            this.$container.addClass('display-avatar-only');
-            break;
+            case DISPLAY_AVATAR_WITH_NAME:
+                displayModeString = 'avatar-with-name';
+                this.$container.addClass('display-avatar-with-name');
+                break;
+            case DISPLAY_BLACKNESS_WITH_NAME:
+                displayModeString = 'blackness-with-name';
+                this.$container.addClass('display-name-on-black');
+                break;
+            case DISPLAY_VIDEO:
+                displayModeString = 'video';
+                this.$container.addClass('display-video');
+                break;
+            case DISPLAY_VIDEO_WITH_NAME:
+                displayModeString = 'video-with-name';
+                this.$container.addClass('display-name-on-video');
+                break;
+            case DISPLAY_AVATAR:
+            default:
+                displayModeString = 'avatar';
+                this.$container.addClass('display-avatar-only');
+                break;
         }
 
         if (this.displayMode !== oldDisplayMode) {
@@ -540,10 +540,10 @@ export default class SmallVideo {
             // Maybe add a special case for local participant, as on init of
             // LocalVideo.js the id is set to "local" but will get updated later.
             ReactDOM.render(
-                <Provider store = { APP.store }>
+                <Provider store={APP.store}>
                     <AvatarDisplay
-                        className = 'userAvatar'
-                        participantId = { this.id } />
+                        className='userAvatar'
+                        participantId={this.id} />
                 </Provider>,
                 thumbnail
             );
@@ -596,8 +596,7 @@ export default class SmallVideo {
      */
     showRaisedHandIndicator(show) {
         if (!this.container) {
-            logger.warn(`Unable to raised hand indication - ${
-                this.videoSpanId} does not exist`);
+            logger.warn(`Unable to raised hand indication - ${this.videoSpanId} does not exist`);
 
             return;
         }
@@ -622,7 +621,7 @@ export default class SmallVideo {
         const userAgent = window.navigator.userAgent;
 
         if (userAgent.indexOf('QtWebEngine') > -1
-                && (userAgent.indexOf('Windows') > -1 || userAgent.indexOf('Linux') > -1)) {
+            && (userAgent.indexOf('Windows') > -1 || userAgent.indexOf('Linux') > -1)) {
             this.$container.css('overflow', 'hidden');
         }
     }
@@ -701,28 +700,28 @@ export default class SmallVideo {
         }
 
         ReactDOM.render(
-            <Provider store = { APP.store }>
-                <I18nextProvider i18n = { i18next }>
+            <Provider store={APP.store}>
+                <I18nextProvider i18n={i18next}>
                     <div>
-                        <AtlasKitThemeProvider mode = 'dark'>
-                            { this._showConnectionIndicator
+                        <AtlasKitThemeProvider mode='dark'>
+                            {this._showConnectionIndicator
                                 ? <ConnectionIndicator
-                                    alwaysVisible = { showConnectionIndicator }
-                                    iconSize = { iconSize }
-                                    isLocalVideo = { this.isLocal }
-                                    enableStatsDisplay = { true }
-                                    participantId = { this.id }
-                                    statsPopoverPosition = { statsPopoverPosition } />
-                                : null }
+                                    alwaysVisible={showConnectionIndicator}
+                                    iconSize={iconSize}
+                                    isLocalVideo={this.isLocal}
+                                    enableStatsDisplay={true}
+                                    participantId={this.id}
+                                    statsPopoverPosition={statsPopoverPosition} />
+                                : null}
                             <RaisedHandIndicator
-                                iconSize = { iconSize }
-                                participantId = { this.id }
-                                tooltipPosition = { tooltipPosition } />
-                            { this._showDominantSpeaker && participantCount > 2
+                                iconSize={iconSize}
+                                participantId={this.id}
+                                tooltipPosition={tooltipPosition} />
+                            {/* {this._showDominantSpeaker && participantCount > 2
                                 ? <DominantSpeakerIndicator
-                                    iconSize = { iconSize }
-                                    tooltipPosition = { tooltipPosition } />
-                                : null }
+                                    iconSize={iconSize}
+                                    tooltipPosition={tooltipPosition} />
+                                : null} */}
                         </AtlasKitThemeProvider>
                     </div>
                 </I18nextProvider>
@@ -808,60 +807,81 @@ export default class SmallVideo {
     _setThumbnailSize() {
         const layout = getCurrentLayout(APP.store.getState());
         const heightToWidthPercent = 100
-                / (this.isLocal ? interfaceConfig.LOCAL_THUMBNAIL_RATIO : interfaceConfig.REMOTE_THUMBNAIL_RATIO);
+            / (this.isLocal ? interfaceConfig.LOCAL_THUMBNAIL_RATIO : interfaceConfig.REMOTE_THUMBNAIL_RATIO);
 
         switch (layout) {
-        case LAYOUTS.VERTICAL_FILMSTRIP_VIEW: {
-            this.$container.css('padding-top', `${heightToWidthPercent}%`);
-            this.$avatar().css({
-                height: '50%',
-                width: `${heightToWidthPercent / 2}%`
-            });
-            break;
-        }
-        case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW: {
-            const state = APP.store.getState();
-            const { local, remote } = state['features/filmstrip'].horizontalViewDimensions;
-            const size = this.isLocal ? local : remote;
-
-            if (typeof size !== 'undefined') {
-                const { height, width } = size;
-                const avatarSize = height / 2;
-
+            case LAYOUTS.VERTICAL_FILMSTRIP_VIEW: {
                 this.$container.css({
-                    height: `${height}px`,
-                    'min-height': `${height}px`,
-                    'min-width': `${width}px`,
-                    width: `${width}px`
+                    border: '2px solid rgb(255 255 255)',
+                    // 'box-shadow': 'rgb(255 255 255) 0px 0px 0px 3px',
+                    'border-radius': '50%',
+                    'padding-top': `${heightToWidthPercent}%`,
+                    'margin-left': '0px',
+                    'margin-right': '0px',
+                    'margin-bottom': '5px'
                 });
                 this.$avatar().css({
-                    height: `${avatarSize}px`,
-                    width: `${avatarSize}px`
+                    height: '100%',
+                    width: `100%`
                 });
+                break;
             }
-            break;
-        }
-        case LAYOUTS.TILE_VIEW: {
-            const state = APP.store.getState();
-            const { thumbnailSize } = state['features/filmstrip'].tileViewDimensions;
+            case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW: {
+                const state = APP.store.getState();
+                const { local, remote } = state['features/filmstrip'].horizontalViewDimensions;
+                const size = this.isLocal ? local : remote;
 
-            if (typeof thumbnailSize !== 'undefined') {
-                const { height, width } = thumbnailSize;
-                const avatarSize = height / 2;
+                if (typeof size !== 'undefined') {
+                    const { height, width } = size;
 
-                this.$container.css({
-                    height: `${height}px`,
-                    'min-height': `${height}px`,
-                    'min-width': `${width}px`,
-                    width: `${width}px`
-                });
-                this.$avatar().css({
-                    height: `${avatarSize}px`,
-                    width: `${avatarSize}px`
-                });
+                    const avatarSize = height;
+                    // / 2;
+
+                    this.$container.css({
+                        height: `${height}px`,
+                        'min-height': `${height}px`,
+                        'min-width': `${width}px`,
+                        width: `${width}px`,
+                        'margin-left': '0px',
+                        'margin-right': '0px',
+                    });
+                    this.$avatar().css({
+                        height: `100%`,
+                        width: `100%`,
+                    });
+                }
+                break;
             }
-            break;
-        }
+            case LAYOUTS.TILE_VIEW: {
+                const state = APP.store.getState();
+
+                const { thumbnailSize } = state['features/filmstrip'].tileViewDimensions;
+
+                if (typeof thumbnailSize !== 'undefined') {
+                    var { height, width } = thumbnailSize;
+                    // height = height * 1.4;
+                    const avatarSize = height;
+                    // / 2;
+                    this.$container.css({
+                        //overflow: 'hidden',
+                        height: `${height}px`,
+                        'min-height': `${height}px`,
+                        'min-width': `${height}px`,
+                        width: `${height}px`,
+                        border: '4px solid rgb(255 255 255 / 0%)',
+                        'box-shadow': 'rgb(255 255 255) 0px 0px 0px 4px',
+                        'border-radius': `100%`,
+                        'margin-right': '25px',
+                        'margin-left': '25px',
+                        'margin-bottom': '15px',
+                    });
+                    this.$avatar().css({
+                        height: `100%`,
+                        width: `100%`,
+                    });
+                }
+                break;
+            }
         }
     }
 }
