@@ -36,9 +36,9 @@ export function setTileViewDimensions(dimensions: Object, windowSize: Object, is
     const thumbnailSize = calculateThumbnailSizeForTileView({
         ...dimensions,
         clientWidth: widthToUse,
-        clientHeight: heightToUse
+        clientHeight: heightToUse - 200
     });
-    const filmstripWidth = dimensions.columns * (TILE_VIEW_SIDE_MARGINS + thumbnailSize.width);
+    const filmstripWidth = dimensions.columns * (TILE_VIEW_SIDE_MARGINS + 55 + thumbnailSize.width);
 
     return {
         type: SET_TILE_VIEW_DIMENSIONS,

@@ -51,16 +51,16 @@ export function shouldRemoteVideosBeVisible(state: Object) {
     return Boolean(
         participantCount > 2
 
-            // Always show the filmstrip when there is another participant to
-            // show and the filmstrip is hovered, or local video is pinned, or
-            // the toolbar is displayed.
-            || (participantCount > 1
-                && (state['features/filmstrip'].hovered
-                    || state['features/toolbox'].visible
-                    || ((pinnedParticipant = getPinnedParticipant(state))
-                        && pinnedParticipant.local)))
+        // Always show the filmstrip when there is another participant to
+        // show and the filmstrip is hovered, or local video is pinned, or
+        // the toolbar is displayed.
+        || (participantCount > 1
+            && (state['features/filmstrip'].hovered
+                || state['features/toolbox'].visible
+                || ((pinnedParticipant = getPinnedParticipant(state))
+                    && pinnedParticipant.local)))
 
-            || state['features/base/config'].disable1On1Mode);
+        || state['features/base/config'].disable1On1Mode);
 }
 
 /**
@@ -98,12 +98,14 @@ export function calculateThumbnailSizeForTileView({
     clientWidth,
     clientHeight
 }: Object) {
+
     const viewWidth = clientWidth - TILE_VIEW_SIDE_MARGINS;
     const viewHeight = clientHeight - TILE_VIEW_SIDE_MARGINS;
-    const initialWidth = viewWidth / columns;
-    const aspectRatioHeight = initialWidth / TILE_ASPECT_RATIO;
-    const height = Math.floor(Math.min(aspectRatioHeight, viewHeight / visibleRows));
-    const width = Math.floor(TILE_ASPECT_RATIO * height);
+    const rowHeight = Math.floor(viewHeight / visibleRows);
+    const initColumnWidth = Math.floor(viewWidth / columns);
+    const columnWidth = initColumnWidth > 400 ? 400 : initColumnWidth < 200 ? 200 : initColumnWidth;
+    const width = columnWidth < rowHeight ? columnWidth : rowHeight;
+    const height = width;
 
     return {
         height,

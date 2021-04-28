@@ -184,8 +184,10 @@ class Filmstrip extends Component<Props> {
                 if (_rows > _columns) {
                     remoteVideoContainerClassName += ' has-overflow';
                 }
-
                 filmstripRemoteVideosContainerStyle.width = _filmstripWidth;
+                filmstripRemoteVideosContainerStyle.flexFlow = 'wrap-reverse';
+                filmstripRemoteVideosContainerStyle.flexDirection = 'row-reverse';
+                filmstripRemoteVideosContainerStyle.margin = 'auto';
                 break;
             }
         }
@@ -219,6 +221,7 @@ class Filmstrip extends Component<Props> {
                     </div>
                     <div
                         className={remoteVideosWrapperClassName}
+                        style={{ overflowX: 'scroll' }}
                         id='filmstripRemoteVideos'>
                         {/*
                           * XXX This extra video container is needed for
