@@ -54,11 +54,11 @@ export function getTileViewGridDimensions(state: Object, maxColumns: number = ge
     const numberOfParticipants = state['features/base/participants'].length - (iAmRecorder ? 1 : 0);
 
     let columns, visibleRows;
-    if (numberOfParticipants < 4) {
+    if (numberOfParticipants < 5) {
         columns = numberOfParticipants;
         visibleRows = 1;
     }
-    else if (numberOfParticipants < 9) {
+    else if (numberOfParticipants < 11) {
         columns = Math.ceil(numberOfParticipants / 2)
         visibleRows = 2;
     }

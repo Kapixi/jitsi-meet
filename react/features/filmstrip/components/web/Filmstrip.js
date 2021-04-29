@@ -169,6 +169,7 @@ class Filmstrip extends Component<Props> {
 
         const filmstripStyle = {};
         const filmstripRemoteVideosContainerStyle = {};
+        const filmstripRemoteVideosStyles = {}
         let remoteVideoContainerClassName = 'remote-videos-container';
 
         switch (this.props._currentLayout) {
@@ -184,6 +185,7 @@ class Filmstrip extends Component<Props> {
                 if (_rows > _columns) {
                     remoteVideoContainerClassName += ' has-overflow';
                 }
+                filmstripRemoteVideosStyles.overflowX = 'scroll';
                 filmstripRemoteVideosContainerStyle.width = _filmstripWidth;
                 filmstripRemoteVideosContainerStyle.flexFlow = 'wrap-reverse';
                 filmstripRemoteVideosContainerStyle.flexDirection = 'row-reverse';
@@ -221,7 +223,7 @@ class Filmstrip extends Component<Props> {
                     </div>
                     <div
                         className={remoteVideosWrapperClassName}
-                        style={{ overflowX: 'scroll' }}
+                        style={filmstripRemoteVideosStyles}
                         id='filmstripRemoteVideos'>
                         {/*
                           * XXX This extra video container is needed for

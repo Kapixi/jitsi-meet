@@ -146,15 +146,15 @@ export default class RemoteVideo extends SmallVideo {
             = APP.store.getState()['features/base/config'].startSilent ? undefined : this._setAudioVolume;
 
         ReactDOM.render(
-            <Provider store = { APP.store }>
-                <I18nextProvider i18n = { i18next }>
-                    <AtlasKitThemeProvider mode = 'dark'>
+            <Provider store={APP.store}>
+                <I18nextProvider i18n={i18next}>
+                    <AtlasKitThemeProvider mode='dark'>
                         <RemoteVideoMenuTriggerButton
-                            initialVolumeValue = { initialVolumeValue }
+                            initialVolumeValue={initialVolumeValue}
                             onMenuDisplay
-                                = {this._onRemoteVideoMenuDisplay.bind(this)}
-                            onVolumeChange = { onVolumeChange }
-                            participantID = { this.id } />
+                            ={this._onRemoteVideoMenuDisplay.bind(this)}
+                            onVolumeChange={onVolumeChange}
+                            participantID={this.id} />
                     </AtlasKitThemeProvider>
                 </I18nextProvider>
             </Provider>,
@@ -228,8 +228,8 @@ export default class RemoteVideo extends SmallVideo {
 
         return (
             super.isVideoPlayable()
-                && this._canPlayEventReceived
-                && connectionStatus === JitsiParticipantConnectionStatus.ACTIVE
+            && this._canPlayEventReceived
+            && connectionStatus === JitsiParticipantConnectionStatus.ACTIVE
         );
     }
 
@@ -376,11 +376,11 @@ export default class RemoteVideo extends SmallVideo {
 
         if (presenceLabelContainer) {
             ReactDOM.render(
-                <Provider store = { APP.store }>
-                    <I18nextProvider i18n = { i18next }>
+                <Provider store={APP.store}>
+                    <I18nextProvider i18n={i18next}>
                         <PresenceLabel
-                            participantID = { this.id }
-                            className = 'presence-label' />
+                            participantID={this.id}
+                            className='presence-label' />
                     </I18nextProvider>
                 </Provider>,
                 presenceLabelContainer);

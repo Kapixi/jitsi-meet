@@ -38,7 +38,13 @@ export function setTileViewDimensions(dimensions: Object, windowSize: Object, is
         clientWidth: widthToUse,
         clientHeight: heightToUse - 200
     });
-    const filmstripWidth = dimensions.columns * (TILE_VIEW_SIDE_MARGINS + 55 + thumbnailSize.width);
+    let filmstripWidth;
+    if (dimensions.visibleRows < 3) {
+        filmstripWidth = dimensions.columns * (thumbnailSize.width);
+    }
+    else {
+        filmstripWidth = dimensions.columns * (60 + thumbnailSize.width);
+    }
 
     return {
         type: SET_TILE_VIEW_DIMENSIONS,
