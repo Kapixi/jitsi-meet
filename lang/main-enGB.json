@@ -714,7 +714,7 @@
     "videothumbnail": {
         "domute": "Mute",
         "flip": "Flip",
-        "kick": "Kick out",
+        "kick": "Remove Guest",
         "moderator": "Moderator",
         "mute": "Member is muted",
         "muted": "Muted",
