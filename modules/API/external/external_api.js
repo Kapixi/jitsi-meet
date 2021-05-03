@@ -49,6 +49,7 @@ const commands = {
     toggleChat: 'toggle-chat',
     toggleFilmStrip: 'toggle-film-strip',
     showFilmStrip: 'show-film-strip',
+    disableFilmStripPin: 'disable-film-strip-pin',
     toggleShareScreen: 'toggle-share-screen',
     toggleTileView: 'toggle-tile-view',
     toggleFullscreen: 'toggle-fullscreen',

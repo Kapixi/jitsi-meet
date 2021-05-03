@@ -746,7 +746,12 @@ export default class SmallVideo {
             event.preventDefault();
         }
         if (triggerPin) {
-            this.togglePin();
+            const state = APP.store.getState();
+            const settings = state['features/base/settings'];
+            if (typeof settings.disableFilmStripPin === 'undefined' || !settings.disableFilmStripPin) {
+                this.togglePin();
+            }
+
         }
 
         return false;

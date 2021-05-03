@@ -12,6 +12,10 @@ import {
     setPassword,
     setSubject
 } from '../../react/features/base/conference';
+
+import {
+    updateSettings
+} from '../../react/features/base/settings';
 import { parseJWTFromURLParams } from '../../react/features/base/jwt';
 import JitsiMeetJS, { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
 import { pinParticipant } from '../../react/features/base/participants';
@@ -168,6 +172,11 @@ function initCommands() {
         'show-film-strip': (action) => {
             sendAnalytics(createApiEvent('film.strip.toggled'));
             APP.UI.showFilmstrip(action);
+        },
+        'disable-film-strip-pin': (action) => {
+            APP.store.dispatch(updateSettings({
+                disableFilmStripPin: action
+            }));
         },
         'toggle-chat': () => {
             sendAnalytics(createApiEvent('chat.toggled'));
