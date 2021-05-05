@@ -54,7 +54,7 @@ function LocalVideoMenuTriggerButton(props: Props) {
                 overflowDrawer = { props._overflowDrawer }
                 position = { props._menuPosition }>
                 <span
-                    className = 'popover-trigger local-video-menu-trigger'>
+                    className = 'popover-trigger local-video-menu-trigger remote-video-menu-trigger'>
                     <Icon
                         size = '1em'
                         src = { IconMenuThumb }
