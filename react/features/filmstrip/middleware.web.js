@@ -20,40 +20,40 @@ MiddlewareRegistry.register(store => next => action => {
     const result = next(action);
 
     switch (action.type) {
-    case CLIENT_RESIZED: {
-        const state = store.getState();
-        const layout = getCurrentLayout(state);
+        case CLIENT_RESIZED: {
+            const state = store.getState();
+            const layout = getCurrentLayout(state);
 
-        switch (layout) {
-        case LAYOUTS.TILE_VIEW: {
-            const { gridDimensions } = state['features/filmstrip'].tileViewDimensions;
-            const { clientHeight, clientWidth } = state['features/base/responsive-ui'];
+            switch (layout) {
+                case LAYOUTS.TILE_VIEW: {
+                    const { gridDimensions } = state['features/filmstrip'].tileViewDimensions;
+                    const { clientHeight, clientWidth } = state['features/base/responsive-ui'];
 
-            store.dispatch(
-                setTileViewDimensions(
-                    gridDimensions,
-                    {
-                        clientHeight,
-                        clientWidth
-                    },
-                    store
-                )
-            );
+                    store.dispatch(
+                        setTileViewDimensions(
+                            gridDimensions,
+                            {
+                                clientHeight,
+                                clientWidth
+                            },
+                            store
+                        )
+                    );
+                    break;
+                }
+                case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW:
+                    store.dispatch(setHorizontalViewDimensions(state['features/base/responsive-ui'].clientHeight));
+                    break;
+            }
             break;
         }
-        case LAYOUTS.HORIZONTAL_FILMSTRIP_VIEW:
-            store.dispatch(setHorizontalViewDimensions(state['features/base/responsive-ui'].clientHeight));
+        case SETTINGS_UPDATED: {
+            if (typeof action.settings?.localFlipX === 'boolean') {
+                // TODO: This needs to be removed once the large video is Reactified.
+                VideoLayout.onLocalFlipXChanged();
+            }
             break;
         }
-        break;
-    }
-    case SETTINGS_UPDATED: {
-        if (typeof action.settings?.localFlipX === 'boolean') {
-            // TODO: This needs to be removed once the large video is Reactified.
-            VideoLayout.onLocalFlipXChanged();
-        }
-        break;
-    }
     }
 
     return result;

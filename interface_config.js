@@ -161,7 +161,7 @@ var interfaceConfig = {
     // has a suboptimal experience. Browsers which are not listed as optimal or
     // unsupported are considered suboptimal. Valid values are:
     // chrome, chromium, edge, electron, firefox, nwjs, opera, safari
-    OPTIMAL_BROWSERS: [ 'chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari' ],
+    OPTIMAL_BROWSERS: ['chrome', 'chromium', 'firefox', 'nwjs', 'electron', 'safari'],
 
     POLICY_LOGO: null,
     PROVIDER_NAME: 'Jitsi',
@@ -174,7 +174,7 @@ var interfaceConfig = {
     RECENT_LIST_ENABLED: true,
     REMOTE_THUMBNAIL_RATIO: 1, // 1:1
 
-    SETTINGS_SECTIONS: [ 'devices', 'language', 'moderator', 'profile', 'calendar' ],
+    SETTINGS_SECTIONS: ['devices', 'language', 'moderator', 'profile', 'calendar'],
 
     /**
      * Specify which sharing features should be displayed. If the value is not set
@@ -202,7 +202,7 @@ var interfaceConfig = {
      */
     SUPPORT_URL: 'https://community.jitsi.org/',
 
-    TOOLBAR_ALWAYS_VISIBLE: false,
+    TOOLBAR_ALWAYS_VISIBLE: true,
 
     /**
      * DEPRECATED!
@@ -216,7 +216,7 @@ var interfaceConfig = {
     //     'tileview', 'select-background', 'download', 'help', 'mute-everyone', 'mute-video-everyone', 'security'
     // ],
 
-    TOOLBAR_TIMEOUT: 4000,
+    TOOLBAR_TIMEOUT: 20000,
 
     // Browsers, in addition to those which do not fully support WebRTC, that
     // are not supported and should show the unsupported browser page.

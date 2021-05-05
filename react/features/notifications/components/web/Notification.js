@@ -50,16 +50,16 @@ class Notification extends AbstractNotification<Props> {
             titleKey,
             uid
         } = this.props;
-
         return (
+
             <Flag
-                actions = { this._mapAppearanceToButtons(hideErrorSupportLink) }
-                appearance = { appearance }
-                description = { this._renderDescription() }
-                icon = { this._mapAppearanceToIcon() }
-                id = { uid }
-                testId = { titleKey }
-                title = { title || t(titleKey, titleArguments) } />
+                actions={this._mapAppearanceToButtons(hideErrorSupportLink)}
+                appearance={appearance}
+                description={this._renderDescription()}
+                icon={this._mapAppearanceToIcon()}
+                id={uid}
+                testId={titleKey}
+                title={title || t(titleKey, titleArguments)} />
         );
     }
 
@@ -81,8 +81,8 @@ class Notification extends AbstractNotification<Props> {
 
         // the id is used for testing the UI
         return (
-            <div data-testid = { this._getDescriptionKey() } >
-                { description }
+            <div data-testid={this._getDescriptionKey()} >
+                { description}
             </div>
         );
     }
@@ -108,46 +108,46 @@ class Notification extends AbstractNotification<Props> {
      */
     _mapAppearanceToButtons(hideErrorSupportLink) {
         switch (this.props.appearance) {
-        case NOTIFICATION_TYPE.ERROR: {
-            const buttons = [
-                {
-                    content: this.props.t('dialog.dismiss'),
-                    onClick: this._onDismissed
-                }
-            ];
-
-            if (!hideErrorSupportLink) {
-                buttons.push({
-                    content: this.props.t('dialog.contactSupport'),
-                    onClick: this._onOpenSupportLink
-                });
-            }
-
-            return buttons;
-        }
-        case NOTIFICATION_TYPE.WARNING:
-            return [
-                {
-                    content: this.props.t('dialog.Ok'),
-                    onClick: this._onDismissed
-                }
-            ];
-
-        default:
-            if (this.props.customActionNameKey && this.props.customActionHandler) {
-                return [
+            case NOTIFICATION_TYPE.ERROR: {
+                const buttons = [
                     {
-                        content: this.props.t(this.props.customActionNameKey),
-                        onClick: () => {
-                            if (this.props.customActionHandler()) {
-                                this._onDismissed();
-                            }
-                        }
+                        content: this.props.t('dialog.dismiss'),
+                        onClick: this._onDismissed
                     }
                 ];
-            }
 
-            return [];
+                if (!hideErrorSupportLink) {
+                    buttons.push({
+                        content: this.props.t('dialog.contactSupport'),
+                        onClick: this._onOpenSupportLink
+                    });
+                }
+
+                return buttons;
+            }
+            case NOTIFICATION_TYPE.WARNING:
+                return [
+                    {
+                        content: this.props.t('dialog.Ok'),
+                        onClick: this._onDismissed
+                    }
+                ];
+
+            default:
+                if (this.props.customActionNameKey && this.props.customActionHandler) {
+                    return [
+                        {
+                            content: this.props.t(this.props.customActionNameKey),
+                            onClick: () => {
+                                if (this.props.customActionHandler()) {
+                                    this._onDismissed();
+                                }
+                            }
+                        }
+                    ];
+                }
+
+                return [];
         }
     }
 
@@ -164,29 +164,29 @@ class Notification extends AbstractNotification<Props> {
         const iconSize = 'medium';
 
         switch (appearance) {
-        case NOTIFICATION_TYPE.ERROR:
-            return (
-                <ErrorIcon
-                    label = { appearance }
-                    secondaryColor = { secIconColor }
-                    size = { iconSize } />
-            );
+            case NOTIFICATION_TYPE.ERROR:
+                return (
+                    <ErrorIcon
+                        label={appearance}
+                        secondaryColor={secIconColor}
+                        size={iconSize} />
+                );
 
-        case NOTIFICATION_TYPE.WARNING:
-            return (
-                <WarningIcon
-                    label = { appearance }
-                    secondaryColor = { secIconColor }
-                    size = { iconSize } />
-            );
+            case NOTIFICATION_TYPE.WARNING:
+                return (
+                    <WarningIcon
+                        label={appearance}
+                        secondaryColor={secIconColor}
+                        size={iconSize} />
+                );
 
-        default:
-            return (
-                <EditorInfoIcon
-                    label = { appearance }
-                    secondaryColor = { secIconColor }
-                    size = { iconSize } />
-            );
+            default:
+                return (
+                    <EditorInfoIcon
+                        label={appearance}
+                        secondaryColor={secIconColor}
+                        size={iconSize} />
+                );
         }
     }
 }

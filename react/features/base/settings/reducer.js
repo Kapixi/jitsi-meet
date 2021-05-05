@@ -25,6 +25,7 @@ const DEFAULT_STATE = {
     email: undefined,
     localFlipX: true,
     micDeviceId: undefined,
+    disableFilmStripPin: undefined,
     serverURL: undefined,
     startAudioOnly: false,
     startWithAudioMuted: false,
@@ -60,14 +61,14 @@ PersistenceRegistry.register(STORE_NAME, filterSubtree);
 
 ReducerRegistry.register(STORE_NAME, (state = DEFAULT_STATE, action) => {
     switch (action.type) {
-    case APP_WILL_MOUNT:
-        return _initSettings(state);
+        case APP_WILL_MOUNT:
+            return _initSettings(state);
 
-    case SETTINGS_UPDATED:
-        return {
-            ...state,
-            ...action.settings
-        };
+        case SETTINGS_UPDATED:
+            return {
+                ...state,
+                ...action.settings
+            };
     }
 
     return state;

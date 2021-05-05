@@ -16,7 +16,7 @@ type Props = AbstractProps & {
     /**
      * Whether we are a SIP gateway or not.
      */
-     _iAmSipGateway: boolean
+    _iAmSipGateway: boolean
 };
 
 /**
@@ -41,9 +41,9 @@ class NotificationsContainer extends AbstractNotificationsContainer<Props> {
 
         return (
             <FlagGroup
-                id = 'notifications-container'
-                onDismissed = { this._onDismissed }>
-                { this._renderFlags() }
+                id='notifications-container'
+                onDismissed={this._onDismissed}>
+                { this._renderFlags()}
             </FlagGroup>
         );
     }
@@ -67,12 +67,13 @@ class NotificationsContainer extends AbstractNotificationsContainer<Props> {
             // either id or key to set a key on notifications, but accessing
             // props.key will cause React to print an error.
             return (
+
                 <Notification
-                    { ...props }
-                    id = { uid }
-                    key = { uid }
-                    onDismissed = { this._onDismissed }
-                    uid = { uid } />
+                    {...props}
+                    id={uid}
+                    key={uid}
+                    onDismissed={this._onDismissed}
+                    uid={uid} />
 
             );
         });

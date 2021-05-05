@@ -50,7 +50,7 @@
     &__toolbar,
     &__toptoolbar {
         position: absolute;
-        left: 0;
+        // left: 0;
         pointer-events: none;
         z-index: $zindex10;
         width: 100%;
@@ -75,11 +75,53 @@
             float: left;
             pointer-events: all;
         }
+
+        .videoMuted {
+            // position: absolute;
+            // top: -62;
+            // right: -3;
+            margin-right: 0px !important;
+            width: 20px !important;
+            height: 20px !important;
+            background-color: #333333;
+            border: 1px solid #fff !important;
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            svg {
+                fill: #20b7ae;
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        .audioMuted {
+            // position: absolute;
+            // top: -35;
+            // right: -3;
+            margin-right: 0px !important;
+            width: 20px !important;
+            height: 20px !important;
+            background-color: #333333;
+            border: 1px solid #fff !important;
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            svg {
+                fill: #20b7ae;
+                width: 12px;
+                height: 12px;
+            }
+        }
     }
 
     &__toolbar {
-        bottom: 0;
-        height: $thumbnailToolbarHeight;
+        height: 100%;
+        width: $thumbnailToolbarHeight;
+        right: 0;
+        top: 0;
         padding: 0 5px 0 5px;
     }
 
@@ -91,7 +133,8 @@
          * Override text-align center as icons need to be left justified.
          */
         text-align: left;
-
+        display: flex;
+        justify-content: center;
         /**
          * Intentionally use margin on the icon itself as AtlasKit InlineDialog
          * positioning depends on the trigger (indicator icon).
@@ -140,21 +183,18 @@
                 @include transform(translate(0, -50%));
 
                 &_empty,
-                &_lost
-                {
-                    color: #8B8B8B;/*#FFFFFF*/
+                &_lost {
+                    color: #8b8b8b; /*#FFFFFF*/
                     overflow: hidden;
                 }
 
-                &_full
-                {
+                &_full {
                     @include topLeft();
-                    color: #FFFFFF;/*#15A1ED*/
+                    color: #ffffff; /*#15A1ED*/
                     overflow: hidden;
                 }
 
-                &_ninja
-                {
+                &_ninja {
                     font-size: 1.5em;
                 }
             }
@@ -166,12 +206,15 @@
         }
 
         .hide-connection-indicator {
-            display: none;
+            display: none !important;
+        }
+        .show-connection-indicator {
+            display: none !important;
         }
     }
 
     &__hoverOverlay {
-        background: rgba(0,0,0,.6);
+        background: rgba(0, 0, 0, 0.6);
         border-radius: $borderRadius;
         position: absolute;
         top: 0px;
@@ -190,10 +233,35 @@
             }
         }
     }
+
+    video {
+        border-radius: 50% !important;
+    }
+    audio {
+        border-radius: 50% !important;
+    }
+
+    .videocontainer__background {
+        border-radius: 50% !important;
+        background-color: #333 !important;
+    }
+
+    .videocontainer__hoverOverlay {
+        border-radius: 50% !important;
+    }
+}
+
+#largeVideoWrapper {
+    video {
+        border-radius: 0px !important;
+    }
+    audio {
+        border-radius: 0px !important;
+    }
 }
 
 #localVideoWrapper {
-    display:inline-block;
+    display: inline-block;
 }
 
 .flipVideoX {
@@ -227,8 +295,7 @@
 }
 
 #largeVideo,
-#largeVideoWrapper
-{
+#largeVideoWrapper {
     object-fit: cover;
 }
 
@@ -238,10 +305,10 @@
 #localVideoWrapper object,
 #localVideoWrapper,
 #largeVideoWrapper,
-#largeVideoWrapper>video,
-#largeVideoWrapper>object,
-.videocontainer>video,
-.videocontainer>object {
+#largeVideoWrapper > video,
+#largeVideoWrapper > object,
+.videocontainer > video,
+.videocontainer > object {
     position: absolute;
     left: 0;
     top: 0;
@@ -305,6 +372,25 @@
     cursor: text;
 }
 
+#localVideoContainer {
+    // overflow: hidden;
+    border-radius: 50%;
+}
+
+#localVideoWrapper {
+    border-radius: 50% !important;
+    video {
+        border-radius: 50% !important;
+    }
+    audio {
+        border-radius: 50% !important;
+    }
+}
+
+#localVideoWrapper {
+    border-radius: 50% !important;
+}
+
 .videocontainer .displayname {
     pointer-events: none;
     padding: 0 3px 0 3px;
@@ -318,10 +404,10 @@
     pointer-events: auto !important;
 }
 
-.videocontainer>a.displayname {
+.videocontainer > a.displayname {
     display: inline-block;
     position: absolute;
-    color: #FFFFFF;
+    color: #ffffff;
     bottom: 0;
     right: 0;
     padding: 3px 5px;
@@ -336,8 +422,8 @@
 .videocontainer .toolbar-icon {
     font-size: 8pt;
     text-align: center;
-    text-shadow: 0px 1px 0px rgba(255,255,255,.3), 0px -1px 0px rgba(0,0,0,.7);
-    color: #FFFFFF;
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.3), 0px -1px 0px rgba(0, 0, 0, 0.7);
+    color: #ffffff;
     width: 12px;
     line-height: $thumbnailToolbarHeight;
     height: $thumbnailToolbarHeight;
@@ -349,7 +435,7 @@
 /**
  * Toolbar icon internal i elements (font icons).
  */
-.toolbar-icon>div {
+.toolbar-icon > div {
     height: $thumbnailToolbarHeight;
     display: flex;
     flex-direction: column;
@@ -373,7 +459,11 @@
 }
 
 .raisehandindicator {
-  background: $raiseHandBg;
+    background: #20b7ae !important;
+}
+
+#dominantspeakerindicator {
+    background: #20b7ae !important;
 }
 
 .connection-indicator {
@@ -384,7 +474,7 @@
     }
 
     &.status-med {
-        background: #FFD740;
+        background: #ffd740;
     }
 
     &.status-lost {
@@ -392,7 +482,7 @@
     }
 
     &.status-low {
-        background: #BF2117;
+        background: #bf2117;
     }
 
     &.status-other {
@@ -407,16 +497,17 @@
 {
     display: inline-block;
     position: absolute;
-    top: 0px;
-    right: 0;
+    // top: 0px;
+    // right: 0;
+    bottom: 0px;
     z-index: $zindex2;
     width: 18px;
     height: 13px;
-    color: #FFF;
+    color: #fff;
     font-size: 10pt;
     margin-right: $remoteVideoMenuIconMargin;
 
-    >i{
+    > i {
         cursor: hand;
     }
 }
@@ -428,8 +519,8 @@
 /**
  * Audio indicator on video thumbnails.
  */
-.videocontainer>span.audioindicator,
-.videocontainer>.audioindicator-container {
+.videocontainer > span.audioindicator,
+.videocontainer > .audioindicator-container {
     position: absolute;
     display: inline-block;
     left: 6px;
@@ -446,10 +537,10 @@
         opacity: 0;
         display: inline-block;
         @include circle(5px);
-        background: $audioLevelShadow;
+        background: #066861;
         margin: 1px 0 1px 0;
-        transition: opacity .25s ease-in-out;
-        -moz-transition: opacity .25s ease-in-out;
+        transition: opacity 0.25s ease-in-out;
+        -moz-transition: opacity 0.25s ease-in-out;
     }
 
     span.audiodot-top::after,
@@ -460,18 +551,18 @@
         width: 5px;
         height: 5px;
         border-radius: 50%;
-        -webkit-filter: blur(0.5px);
-        filter: blur(0.5px);
-        background: $audioLevelBg;
+        // -webkit-filter: blur(0.5px);
+        // filter: blur(0.5px);
+        background: #20b7ae;
     }
 }
 
 #reloadPresentation {
     display: none;
     position: absolute;
-    color: #FFFFFF;
+    color: #ffffff;
     top: 0;
-    right:0;
+    right: 0;
     padding: 10px 10px;
     font-size: 11pt;
     cursor: pointer;
@@ -481,6 +572,14 @@
     -webkit-border-radius: 5px;
     -webkit-background-clip: padding-box;
     z-index: $reloadZ; /*The reload button should appear on top of the header!*/
+}
+
+.audiolevel {
+    display: inline-block;
+    position: absolute;
+    z-index: $zindex0;
+    border-radius: 1px;
+    pointer-events: none;
 }
 
 #dominantSpeaker {
@@ -494,7 +593,7 @@
 }
 
 #mixedstream {
-    display:none !important;
+    display: none !important;
 }
 
 #dominantSpeakerAvatarContainer,
@@ -521,14 +620,14 @@
 }
 
 .avatar-container {
-    @include maxSize(60px);
+    // @include maxSize(60px);
     @include absoluteAligning();
     display: flex;
     justify-content: center;
-    height: 50%;
+    height: 100%;
     width: auto;
     overflow: hidden;
-
+    border-radius: 50% !important;
     .userAvatar {
         height: 100%;
         object-fit: cover;
@@ -567,8 +666,8 @@
 }
 
 .videoMessageFilter {
-    -webkit-filter: grayscale(.5) opacity(0.8);
-    filter: grayscale(.5) opacity(0.8);
+    -webkit-filter: grayscale(0.5) opacity(0.8);
+    filter: grayscale(0.5) opacity(0.8);
 }
 
 #remotePresenceMessage,
@@ -579,19 +678,17 @@
     font-weight: 600;
     font-size: 14px;
     text-align: center;
-    color: #FFF;
+    color: #fff;
     left: 50%;
     transform: translate(-50%, 0);
 }
 #remotePresenceMessage .presence-label,
 #remoteConnectionMessage {
-    opacity: .80;
-    text-shadow:    0px 0px 1px rgba(0,0,0,0.3),
-                    0px 1px 1px rgba(0,0,0,0.3),
-                    1px 0px 1px rgba(0,0,0,0.3),
-                    0px 0px 1px rgba(0,0,0,0.3);
+    opacity: 0.8;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3), 0px 1px 1px rgba(0, 0, 0, 0.3), 1px 0px 1px rgba(0, 0, 0, 0.3),
+        0px 0px 1px rgba(0, 0, 0, 0.3);
 
-    background: rgba(0,0,0,.5);
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     padding: 5px;
     padding-left: 10px;

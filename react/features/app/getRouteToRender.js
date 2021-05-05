@@ -115,21 +115,22 @@ function _getWebConferenceRoute(state): ?Promise<Route> {
  */
 function _getWebWelcomePageRoute(state): Promise<Route> {
     const route = _getEmptyRoute();
+    //route.href = href + '/404'
+    // if (isWelcomePageUserEnabled(state)) {
+    //     if (isSupportedBrowser()) {
+    //         route.component = WelcomePage;
+    //     } else {
+    //         route.component = UnsupportedDesktopBrowser;
+    //     }
+    // } else {
+    //     // Web: if the welcome page is disabled, go directly to a random room.
 
-    if (isWelcomePageUserEnabled(state)) {
-        if (isSupportedBrowser()) {
-            route.component = WelcomePage;
-        } else {
-            route.component = UnsupportedDesktopBrowser;
-        }
-    } else {
-        // Web: if the welcome page is disabled, go directly to a random room.
+    //     let href = window.location.href;
 
-        let href = window.location.href;
-
-        href.endsWith('/') || (href += '/');
-        route.href = href + generateRoomWithoutSeparator();
-    }
+    //     href.endsWith('/') || (href += '/');
+    //     route.href = href + '/404'
+    //     //+ generateRoomWithoutSeparator();
+    // }
 
     return Promise.resolve(route);
 }

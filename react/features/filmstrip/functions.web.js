@@ -70,14 +70,14 @@ export function shouldRemoteVideosBeVisible(state: Object) {
     return Boolean(
         participantCount > 2
 
-            // Always show the filmstrip when there is another participant to
-            // show and the  local video is pinned, or the toolbar is displayed.
-            || (participantCount > 1
-                && (state['features/toolbox'].visible
-                    || ((pinnedParticipant = getPinnedParticipant(state))
-                        && pinnedParticipant.local)))
+        // Always show the filmstrip when there is another participant to
+        // show and the  local video is pinned, or the toolbar is displayed.
+        || (participantCount > 1
+            && (state['features/toolbox'].visible
+                || ((pinnedParticipant = getPinnedParticipant(state))
+                    && pinnedParticipant.local)))
 
-            || state['features/base/config'].disable1On1Mode);
+        || state['features/base/config'].disable1On1Mode);
 }
 
 /**
@@ -150,18 +150,22 @@ export function calculateThumbnailSizeForTileView({
     clientHeight,
     disableResponsiveTiles
 }: Object) {
-    let aspectRatio = TILE_ASPECT_RATIO;
 
-    if (!disableResponsiveTiles && clientWidth < ASPECT_RATIO_BREAKPOINT) {
-        aspectRatio = SQUARE_TILE_ASPECT_RATIO;
-    }
-
-    const viewWidth = clientWidth - TILE_VIEW_SIDE_MARGINS;
+    const viewWidth = clientWidth;
     const viewHeight = clientHeight - TILE_VIEW_SIDE_MARGINS;
-    const initialWidth = viewWidth / columns;
-    const aspectRatioHeight = initialWidth / aspectRatio;
-    const height = Math.floor(Math.min(aspectRatioHeight, viewHeight / visibleRows));
-    const width = Math.floor(aspectRatio * height);
+    const rowHeight = Math.floor(viewHeight / visibleRows);
+    const initColumnWidth = Math.floor(viewWidth / columns);
+    let columnWidth, width, height;
+    if (visibleRows < 3) {
+        columnWidth = initColumnWidth > 460 ? 460 : initColumnWidth;
+        width = columnWidth < rowHeight + 60 ? columnWidth : rowHeight + 60;
+        height = width - 60;
+    }
+    else {
+        columnWidth = initColumnWidth > 400 ? 400 : initColumnWidth < 200 ? 200 : initColumnWidth;
+        width = columnWidth < rowHeight ? columnWidth : rowHeight;
+        height = width;
+    }
 
     return {
         height,

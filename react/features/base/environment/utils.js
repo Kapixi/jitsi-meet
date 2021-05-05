@@ -8,6 +8,7 @@ import Platform from '../react/Platform';
  * @returns {boolean}
  */
 export function isMobileBrowser() {
+    return false;
     return Platform.OS === 'android' || Platform.OS === 'ios';
 }
 
@@ -33,10 +34,10 @@ export function checkChromeExtensionsInstalled(config: Object = {}) {
         const img = new Image();
 
         img.src = `chrome-extension://${info.id}/${info.path}`;
-        img.onload = function() {
+        img.onload = function () {
             resolve(true);
         };
-        img.onerror = function() {
+        img.onerror = function () {
             resolve(false);
         };
     });

@@ -127,15 +127,15 @@ export function connect(id, password, roomName) {
          *
          */
         function connectionFailedHandler(error, message, credentials, details) {
-        /* eslint-enable max-params */
+            /* eslint-enable max-params */
             APP.store.dispatch(
                 connectionFailed(
                     connection, {
-                        credentials,
-                        details,
-                        message,
-                        name: error
-                    }));
+                    credentials,
+                    details,
+                    message,
+                    name: error
+                }));
 
             if (isFatalJitsiConnectionError(error)) {
                 connection.removeEventListener(
@@ -213,6 +213,7 @@ export function openConnection({ id, password, retry, roomName }) {
     }
 
     return connect(id, password, roomName).catch(err => {
+
         if (retry) {
             const { jwt } = APP.store.getState()['features/base/jwt'];
 

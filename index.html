@@ -1,5 +1,6 @@
 <html itemscope itemtype="http://schema.org/Product" prefix="og: http://ogp.me/ns#" xmlns="http://www.w3.org/1999/html">
-  <head>
+
+<head>
     <!--#include virtual="head.html" -->
     <meta charset="utf-8">
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
@@ -63,15 +64,15 @@
             "app.bundle.min.js",
             "all.css"
         ];
-        var loadErrHandler = function(e) {
+        var loadErrHandler = function (e) {
             var target = e.target;
             // Error on <script> and <link>(CSS)
             // <script> will have .src and <link> .href
             var fileRef = (target.src ? target.src : target.href);
             if (("SCRIPT" === target.tagName || "LINK" === target.tagName)
                 && criticalFiles.some(
-                    function(file) { return fileRef.indexOf(file) !== -1 })) {
-                window.onload = function() {
+                    function (file) { return fileRef.indexOf(file) !== -1 })) {
+                window.onload = function () {
                     // The whole complex part below implements page reloads with
                     // "exponential backoff". The retry attempt is passes as
                     // "rCounter" query parameter
@@ -138,24 +139,24 @@
 
                     var showMoreElem = document.getElementById("showMore");
                     showMoreElem.addEventListener('click', function () {
-                            var moreInfoElem
-                                    = document.getElementById("moreInfo");
+                        var moreInfoElem
+                            = document.getElementById("moreInfo");
 
-                            if (showMoreElem.innerHTML === showMoreText) {
-                                moreInfoElem.setAttribute(
-                                    "style",
-                                    "display: block;"
-                                    + "color:#FF991F;"
-                                    + "font-size:small;"
-                                    + "user-select:text;");
-                                showMoreElem.innerHTML = showLessText;
-                            }
-                            else {
-                                moreInfoElem.setAttribute(
-                                    "style", "display: none;");
-                                showMoreElem.innerHTML = showMoreText;
-                            }
-                        });
+                        if (showMoreElem.innerHTML === showMoreText) {
+                            moreInfoElem.setAttribute(
+                                "style",
+                                "display: block;"
+                                + "color:#FF991F;"
+                                + "font-size:small;"
+                                + "user-select:text;");
+                            showMoreElem.innerHTML = showLessText;
+                        }
+                        else {
+                            moreInfoElem.setAttribute(
+                                "style", "display: none;");
+                            showMoreElem.innerHTML = showMoreText;
+                        }
+                    });
 
                     window.setTimeout(
                         function () { window.location.replace(href); }, delay);
@@ -172,11 +173,11 @@
         window.addEventListener(
             'error', loadErrHandler, true /* capture phase type of listener */);
     </script>
-    <script><!--#include virtual="/config.js" --></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
+    <script>< !--#include virtual = "/config.js" -- ></script><!-- adapt to your needs, i.e. set hosts and bosh path -->
     <!--#include virtual="connection_optimization/connection_optimization.html" -->
     <script src="libs/do_external_connect.min.js?v=1"></script>
-    <script><!--#include virtual="/interface_config.js" --></script>
-    <script><!--#include virtual="/logging_config.js" --></script>
+    <script>< !--#include virtual = "/interface_config.js" -- ></script>
+    <script>< !--#include virtual = "/logging_config.js" -- ></script>
     <script src="libs/lib-jitsi-meet.min.js?v=139"></script>
     <script src="libs/app.bundle.min.js?v=139"></script>
     <!--#include virtual="title.html" -->
@@ -184,12 +185,14 @@
     <!--#include virtual="static/welcomePageAdditionalContent.html" -->
     <!--#include virtual="static/welcomePageAdditionalCard.html" -->
     <!--#include virtual="static/settingsToolbarAdditionalContent.html" -->
-  </head>
-  <body>
+</head>
+
+<body>
     <noscript>
         <div>JavaScript is disabled. </br>For this site to work you have to enable JavaScript.</div>
     </noscript>
     <!--#include virtual="body.html" -->
     <div id="react"></div>
-  </body>
+</body>
+
 </html>

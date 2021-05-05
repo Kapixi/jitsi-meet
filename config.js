@@ -355,7 +355,7 @@ var config = {
 
     // Whether to use a welcome page or not. In case it's false a random room
     // will be joined when no room is specified.
-    enableWelcomePage: true,
+    enableWelcomePage: false,
 
     // Disable app shortcuts that are registered upon joining a conference
     // disableShortcuts: false,

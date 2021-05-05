@@ -128,8 +128,8 @@ class Watermarks extends Component<Props, State> {
         if (this.state.showBrandWatermark) {
             reactElement = (
                 <div
-                    className = 'watermark rightwatermark'
-                    style = { _RIGHT_WATERMARK_STYLE } />
+                    className='watermark rightwatermark'
+                    style={_RIGHT_WATERMARK_STYLE} />
             );
 
             const { brandWatermarkLink } = this.state;
@@ -137,9 +137,9 @@ class Watermarks extends Component<Props, State> {
             if (brandWatermarkLink) {
                 reactElement = (
                     <a
-                        href = { brandWatermarkLink }
-                        target = '_new'>
-                        { reactElement }
+                        href={brandWatermarkLink}
+                        target='_new'>
+                        { reactElement}
                     </a>
                 );
             }
@@ -166,19 +166,22 @@ class Watermarks extends Component<Props, State> {
             const style = {
                 backgroundImage: `url(${_logoUrl})`,
                 maxWidth: 140,
-                maxHeight: 70
+                maxHeight: 70,
+                width: 140,
+                height: 70,
+                zIndex: 10
             };
 
             reactElement = (<div
-                className = 'watermark leftwatermark'
-                style = { style } />);
+                className='watermark leftwatermark'
+                style={style} />);
 
             if (_logoLink) {
                 reactElement = (
                     <a
-                        href = { _logoLink }
-                        target = '_new'>
-                        { reactElement }
+                        href={_logoLink}
+                        target='_new'>
+                        { reactElement}
                     </a>
                 );
             }
@@ -199,10 +202,10 @@ class Watermarks extends Component<Props, State> {
 
             return (
                 <a
-                    className = 'poweredby'
-                    href = 'http://jitsi.org'
-                    target = '_new'>
-                    <span>{ t('poweredby') } jitsi.org</span>
+                    className='poweredby'
+                    href='http://jitsi.org'
+                    target='_new'>
+                    <span>{t('poweredby')} jitsi.org</span>
                 </a>
             );
         }
@@ -236,7 +239,7 @@ function _mapStateToProps(state, ownProps) {
     let _showJitsiWatermark = (
         customizationReady && !customizationFailed
         && SHOW_JITSI_WATERMARK)
-    || !isValidRoom;
+        || !isValidRoom;
     let _logoUrl = logoImageUrl;
     let _logoLink = logoClickUrl;
 

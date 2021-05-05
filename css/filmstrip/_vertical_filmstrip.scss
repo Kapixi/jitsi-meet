@@ -26,7 +26,8 @@
     flex-direction: column-reverse;
     height: 100%;
     width: 100%;
-    padding: ($desktopAppDragBarHeight - 5px) 5px 10px;
+    padding: 0px 5px 10px;
+    //padding: ($desktopAppDragBarHeight - 5px) 5px 10px;
     /**
      * fixed positioning is necessary for remote menus and tooltips to pop
      * out of the scrolling filmstrip. AtlasKit dialogs and tooltips use
@@ -38,7 +39,7 @@
     transition: height .3s ease-in;
     right: 0;
     z-index: $filmstripVideosZ;
-
+    padding-bottom: 80px !important;
     &.reduce-height {
         height: calc(100% - #{$newToolbarSizeWithPadding});
     }
@@ -53,6 +54,8 @@
         position:relative;
         right: 0;
         width: auto;
+        
+        // background: #ffffff90;
 
         &.hidden {
             bottom: auto;
@@ -81,14 +84,28 @@
         flex-direction: column-reverse;
         height: auto;
         justify-content: flex-start;
-
+        padding-right: 8px !important;
+        padding-top: $desktopAppDragBarHeight !important;
         #filmstripLocalVideoThumbnail {
             width: calc(100% - 15px);
-
             .videocontainer {
                 height: 0px;
                 width: 100%;
-    }
+                padding-bottom: 50px !important;
+            }
+            .videocontainer__background {
+                border-radius: 50% !important;
+                background-color: #333 !important;
+            }
+            .videocontainer__hoverOverlay {
+                border-radius: 50% !important;
+            }
+            video {
+                border-radius: 50% !important;
+            }
+            audio {
+                border-radius: 50% !important;
+            }
         }
 
     }
@@ -100,11 +117,13 @@
     #filmstripLocalVideo,
     #filmstripRemoteVideos {
         padding: 0;
+        
     }
 
     #filmstripRemoteVideos {
         @include minHWAutoFix();
-
+        // overflow: visible !important; 
+        padding-right: 8px !important;
         display: flex;
         flex: 1;
         flex-direction: column-reverse;

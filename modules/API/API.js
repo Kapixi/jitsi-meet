@@ -13,6 +13,7 @@ import {
     setSubject
 } from '../../react/features/base/conference';
 import { overwriteConfig, getWhitelistedJSON } from '../../react/features/base/config';
+
 import { parseJWTFromURLParams } from '../../react/features/base/jwt';
 import JitsiMeetJS, { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
 import { MEDIA_TYPE } from '../../react/features/base/media';
@@ -45,8 +46,12 @@ import { toggleTileView, setTileView } from '../../react/features/video-layout';
 import { muteAllParticipants } from '../../react/features/video-menu/actions';
 import { setVideoQuality } from '../../react/features/video-quality';
 import { getJitsiMeetTransport } from '../transport';
-
+import { SETTINGS_TABS } from '../../react/features/settings/constants';
+import { openSettingsDialog } from '../../react/features/settings/actions';
 import { API_ID, ENDPOINT_TEXT_MESSAGE_NAME } from './constants';
+import {
+    setFullScreen,
+} from '../../react/features/toolbox/actions';
 
 const logger = Logger.getLogger(__filename);
 
@@ -184,27 +189,60 @@ function initCommands() {
 
             APP.store.dispatch(updateSettings({ localFlipX: !currentFlipX }));
         },
+        'show-film-strip': (action) => {
+            sendAnalytics(createApiEvent('film.strip.toggled'));
+            APP.UI.showFilmstrip(action);
+        },
+        'disable-film-strip-pin': (action) => {
+            APP.store.dispatch(updateSettings({
+                disableFilmStripPin: action
+            }));
+        },
         'toggle-chat': () => {
             sendAnalytics(createApiEvent('chat.toggled'));
             APP.UI.toggleChat();
         },
         'toggle-raise-hand': () => {
-            const localParticipant = getLocalParticipant(APP.store.getState());
+            const state = APP.store.getState();
+            const localParticipant = getLocalParticipant(state);
+            APP.store.dispatch(participantUpdated({
+                id: localParticipant.id,
+                local: true,
+                raisedHand: !localParticipant.raisedHand
+            }));
 
-            if (!localParticipant) {
-                return;
-            }
-            const { raisedHand } = localParticipant;
-
-            sendAnalytics(createApiEvent('raise-hand.toggled'));
-            APP.store.dispatch(
-                participantUpdated({
-                    id: APP.conference.getMyUserId(),
-                    local: true,
-                    raisedHand: !raisedHand
-                })
-            );
         },
+        'show-settings': () => {
+            const defaultTab = SETTINGS_TABS.DEVICES;
+            APP.store.dispatch(openSettingsDialog(defaultTab));
+        },
+        'set-background': (payload = {}) => {
+            // if (!payload.changedEvent || (payload.changedEvent && (payload.participantId != payload.participantIdWhoChanged))) {
+            if (payload.action == 'add') {
+                $('#largeVideoContainer').css({
+                    'background-image': `url('${payload.imageUrl}')`,
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'center',
+                    'background-size': 'cover',
+                    display: 'inline-block'
+                });
+            } else if (payload.action == 'remove') {
+                $('#largeVideoContainer').css({
+                    'background': `rgb(71, 71, 71)`,
+                    'background-image': '',
+                    display: 'inline-block'
+                });
+            }
+            // if (!payload.changedEvent) {
+            //     transport.sendEvent({
+            //         name: 'background-image-changed',
+            //         payload
+            //     });
+            // }
+            // }
+        },
+
+
 
         /**
          * Callback to invoke when the "toggle-share-screen" command is received.
@@ -226,6 +264,9 @@ function initCommands() {
         },
         'set-tile-view': enabled => {
             APP.store.dispatch(setTileView(enabled));
+        },
+        'toggle-fullscreen': (action) => {
+            APP.store.dispatch(setFullScreen(action));
         },
         'video-hangup': (showFeedbackDialog = true) => {
             sendAnalytics(createApiEvent('video.hangup'));
@@ -364,7 +405,7 @@ function initCommands() {
                 return;
             }
 
-            if (![ JitsiRecordingConstants.mode.FILE, JitsiRecordingConstants.mode.STREAM ].includes(mode)) {
+            if (![JitsiRecordingConstants.mode.FILE, JitsiRecordingConstants.mode.STREAM].includes(mode)) {
                 logger.error('Invalid recording mode provided!');
 
                 return;
@@ -424,96 +465,98 @@ function initCommands() {
         const { name } = request;
 
         switch (name) {
-        case 'capture-largevideo-screenshot' :
-            APP.store.dispatch(captureLargeVideoScreenshot())
-                .then(dataURL => {
-                    let error;
+            case 'capture-largevideo-screenshot':
+                APP.store.dispatch(captureLargeVideoScreenshot())
+                    .then(dataURL => {
+                        let error;
 
-                    if (!dataURL) {
-                        error = new Error('No large video found!');
-                    }
+                        if (!dataURL) {
+                            error = new Error('No large video found!');
+                        }
 
-                    callback({
-                        error,
-                        dataURL
+                        callback({
+                            error,
+                            dataURL
+                        });
                     });
-                });
-            break;
-        case 'invite': {
-            const { invitees } = request;
+                break;
+            case 'invite': {
+                const { invitees } = request;
 
-            if (!Array.isArray(invitees) || invitees.length === 0) {
-                callback({
-                    error: new Error('Unexpected format of invitees')
-                });
+                if (!Array.isArray(invitees) || invitees.length === 0) {
+                    callback({
+                        error: new Error('Unexpected format of invitees')
+                    });
 
+                    break;
+                }
+
+
+
+                // The store should be already available because API.init is called
+                // on appWillMount action.
+                APP.store.dispatch(
+                    invite(invitees, true))
+                    .then(failedInvitees => {
+                        let error;
+                        let result;
+
+                        if (failedInvitees.length) {
+                            error = new Error('One or more invites failed!');
+                        } else {
+                            result = true;
+                        }
+
+                        callback({
+                            error,
+                            result
+                        });
+                    });
                 break;
             }
+            case 'is-audio-muted':
+                callback(APP.conference.isLocalAudioMuted());
+                break;
+            case 'is-video-muted':
+                callback(APP.conference.isLocalVideoMuted());
+                break;
+            case 'is-audio-available':
+                callback(audioAvailable);
+                break;
+            case 'is-video-available':
+                callback(videoAvailable);
+                break;
+            case 'is-sharing-screen':
+                callback(Boolean(APP.conference.isSharingScreen));
+                break;
+            case 'get-content-sharing-participants': {
+                const tracks = getState()['features/base/tracks'];
+                const sharingParticipantIds = tracks.filter(tr => tr.videoType === 'desktop').map(t => t.participantId);
 
-            // The store should be already available because API.init is called
-            // on appWillMount action.
-            APP.store.dispatch(
-                invite(invitees, true))
-                .then(failedInvitees => {
-                    let error;
-                    let result;
-
-                    if (failedInvitees.length) {
-                        error = new Error('One or more invites failed!');
-                    } else {
-                        result = true;
-                    }
-
-                    callback({
-                        error,
-                        result
-                    });
+                callback({
+                    sharingParticipantIds
                 });
-            break;
-        }
-        case 'is-audio-muted':
-            callback(APP.conference.isLocalAudioMuted());
-            break;
-        case 'is-video-muted':
-            callback(APP.conference.isLocalVideoMuted());
-            break;
-        case 'is-audio-available':
-            callback(audioAvailable);
-            break;
-        case 'is-video-available':
-            callback(videoAvailable);
-            break;
-        case 'is-sharing-screen':
-            callback(Boolean(APP.conference.isSharingScreen));
-            break;
-        case 'get-content-sharing-participants': {
-            const tracks = getState()['features/base/tracks'];
-            const sharingParticipantIds = tracks.filter(tr => tr.videoType === 'desktop').map(t => t.participantId);
-
-            callback({
-                sharingParticipantIds
-            });
-            break;
-        }
-        case 'get-livestream-url': {
-            const state = APP.store.getState();
-            const conference = getCurrentConference(state);
-            let livestreamUrl;
-
-            if (conference) {
-                const activeSession = getActiveSession(state, JitsiRecordingConstants.mode.STREAM);
-
-                livestreamUrl = activeSession?.liveStreamViewURL;
-            } else {
-                logger.error('Conference is not defined');
+                break;
             }
-            callback({
-                livestreamUrl
-            });
-            break;
-        }
-        default:
-            return false;
+            case 'get-livestream-url': {
+                const state = APP.store.getState();
+                const conference = getCurrentConference(state);
+                let livestreamUrl;
+
+                if (conference) {
+                    const activeSession = getActiveSession(state, JitsiRecordingConstants.mode.STREAM);
+
+                    livestreamUrl = activeSession?.liveStreamViewURL;
+                } else {
+                    logger.error('Conference is not defined');
+                }
+                callback({
+                    livestreamUrl
+                });
+                break;
+            }
+            default:
+                return false;
         }
 
         return true;
@@ -529,12 +572,12 @@ function shouldBeEnabled() {
     return (
         typeof API_ID === 'number'
 
-            // XXX Enable the API when a JSON Web Token (JWT) is specified in
-            // the location/URL because then it is very likely that the Jitsi
-            // Meet (Web) app is being used by an external/wrapping (Web) app
-            // and, consequently, the latter will need to communicate with the
-            // former. (The described logic is merely a heuristic though.)
-            || parseJWTFromURLParams());
+        // XXX Enable the API when a JSON Web Token (JWT) is specified in
+        // the location/URL because then it is very likely that the Jitsi
+        // Meet (Web) app is being used by an external/wrapping (Web) app
+        // and, consequently, the latter will need to communicate with the
+        // former. (The described logic is merely a heuristic though.)
+        || parseJWTFromURLParams());
 }
 
 /**
@@ -650,6 +693,7 @@ class API {
      * @returns {void}
      */
     notifySendingChatMessage(message: string, privateMessage: boolean) {
+
         this._sendEvent({
             name: 'outgoing-message',
             message,
@@ -678,9 +722,9 @@ class API {
      * @returns {void}
      */
     notifyReceivedChatMessage(
-            { body, id, nick, privateMessage, ts }: {
-                body: *, id: string, nick: string, privateMessage: boolean, ts: *
-            } = {}) {
+        { body, id, nick, privateMessage, ts }: {
+            body: *, id: string, nick: string, privateMessage: boolean, ts: *
+        } = {}) {
         if (APP.conference.isLocalId(id)) {
             return;
         }
@@ -809,8 +853,8 @@ class API {
      * @returns {void}
      */
     notifyDisplayNameChanged(
-            id: string,
-            { displayName, formattedDisplayName }: Object) {
+        id: string,
+        { displayName, formattedDisplayName }: Object) {
         this._sendEvent({
             name: 'display-name-change',
             displayname: displayName,
@@ -828,8 +872,8 @@ class API {
      * @returns {void}
      */
     notifyEmailChanged(
-            id: string,
-            { email }: Object) {
+        id: string,
+        { email }: Object) {
         this._sendEvent({
             name: 'email-change',
             email,
