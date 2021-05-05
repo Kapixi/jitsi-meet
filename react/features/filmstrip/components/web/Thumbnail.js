@@ -475,12 +475,15 @@ class Thumbnail extends Component<Props, State> {
                     thumbnail: {
                         height: `${_height}px`,
                         minHeight: `${_height}px`,
-                        minWidth: `${_width}px`,
-                        width: `${_width}px`
+                        minWidth: `${_height}px`,
+                        width: `${_height}px`,
+                        boxShadow: 'rgb(255 255 255) 0px 0px 0px 4px',
+                        border: '4px solid rgba(255, 255, 255, 0)',
+                        borderRadius: '50%'
                     },
                     avatar: {
-                        height: `${avatarSize}px`,
-                        width: `${avatarSize}px`
+                        height: `${_height - 8}px`,
+                        width: `${_height - 8}px`,
                     }
                 };
                 break;
@@ -488,11 +491,15 @@ class Thumbnail extends Component<Props, State> {
             case LAYOUTS.VERTICAL_FILMSTRIP_VIEW: {
                 styles = {
                     thumbnail: {
-                        paddingTop: `${_heightToWidthPercent}%`
+                        paddingTop: `${_heightToWidthPercent}%`,
+                        boxShadow: 'rgb(255 255 255) 0px 0px 0px 0px',
+                        border: '2px solid rgb(255, 255, 255)',
+                        borderRadius: '50%',
+                        marginBottom:'10px'
                     },
                     avatar: {
-                        height: '50%',
-                        width: `${_heightToWidthPercent / 2}%`
+                        height: '100%',
+                        width: `100%`
                     }
                 };
                 break;
