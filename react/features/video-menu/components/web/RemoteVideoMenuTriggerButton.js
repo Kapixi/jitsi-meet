@@ -104,7 +104,6 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
      */
     render() {
         const content = this._renderRemoteVideoMenu();
-        console.log("remotelisttt", content)
         if (!content) {
             return null;
         }
@@ -203,11 +202,12 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
             );
         }
 
-        buttons.push(
-            <PrivateMessageMenuButton
-                key='privateMessage'
-                participantID={participantID} />
-        );
+        // buttons.push(
+        //     <PrivateMessageMenuButton
+        //         key='privateMessage'
+        //         participantID={participantID} />
+        // );
+
 
         if (onVolumeChange && typeof initialVolumeValue === 'number' && !isNaN(initialVolumeValue)) {
             buttons.push(
@@ -217,7 +217,6 @@ class RemoteVideoMenuTriggerButton extends Component<Props> {
                     onChange={onVolumeChange} />
             );
         }
-
         if (buttons.length > 0) {
             return (
                 <VideoMenu id={participantID}>
