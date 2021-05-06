@@ -152,7 +152,7 @@ class Filmstrip extends Component<Props> {
         let remoteVideoContainerClassName = 'remote-videos-container';
         const { _currentLayout, _participants } = this.props;
         const remoteParticipants = _participants.filter(p => !p.local);
-        console.log(remoteParticipants);
+        // console.log(remoteParticipants);
         const localParticipant = getLocalParticipant(_participants);
         const tileViewActive = _currentLayout === LAYOUTS.TILE_VIEW;
 
