@@ -46,19 +46,19 @@ function LocalVideoMenuTriggerButton(props: Props) {
     return (
         props._showLocalVideoFlipButton
             ? <Popover
-                content = {
-                    <VideoMenu id = 'localVideoMenu'>
+                content={
+                    <VideoMenu id='localVideoMenu'>
                         <FlipLocalVideoButton />
                     </VideoMenu>
                 }
-                overflowDrawer = { props._overflowDrawer }
-                position = { props._menuPosition }>
+                overflowDrawer={props._overflowDrawer}
+                position={props._menuPosition}>
                 <span
-                    className = 'popover-trigger local-video-menu-trigger remote-video-menu-trigger'>
+                    className='popover-trigger local-video-menu-trigger remote-video-menu-trigger'>
                     <Icon
-                        size = '1em'
-                        src = { IconMenuThumb }
-                        title = 'Local user controls' />
+                        size='1em'
+                        src={IconMenuThumb}
+                        title='Local user controls' />
                 </span>
             </Popover>
             : null
@@ -80,14 +80,14 @@ function _mapStateToProps(state) {
     let _menuPosition;
 
     switch (currentLayout) {
-    case LAYOUTS.TILE_VIEW:
-        _menuPosition = 'left-start';
-        break;
-    case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
-        _menuPosition = 'left-end';
-        break;
-    default:
-        _menuPosition = 'auto';
+        case LAYOUTS.TILE_VIEW:
+            _menuPosition = 'left-start';
+            break;
+        case LAYOUTS.VERTICAL_FILMSTRIP_VIEW:
+            _menuPosition = 'left-end';
+            break;
+        default:
+            _menuPosition = 'auto';
     }
 
     return {
