@@ -495,7 +495,7 @@ class Thumbnail extends Component<Props, State> {
                         boxShadow: 'rgb(255 255 255) 0px 0px 0px 0px',
                         border: '2px solid rgb(255, 255, 255)',
                         borderRadius: '50%',
-                        marginBottom:'10px'
+                        marginBottom: '10px'
                     },
                     avatar: {
                         height: '100%',
@@ -630,10 +630,10 @@ class Thumbnail extends Component<Props, State> {
                         participantId={id}
                         statsPopoverPosition={statsPopoverPosition} />
                 }
-                <RaisedHandIndicator
+                {!(showDominantSpeaker && _participantCount > 2) && <RaisedHandIndicator
                     iconSize={iconSize}
                     participantId={id}
-                    tooltipPosition={tooltipPosition} />
+                    tooltipPosition={tooltipPosition} />}
                 { showDominantSpeaker && _participantCount > 2
                     && <DominantSpeakerIndicator
                         iconSize={iconSize}

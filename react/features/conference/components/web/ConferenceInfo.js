@@ -72,19 +72,19 @@ function ConferenceInfo(props: Props) {
     } = props;
 
     return (
-        <div className = { `subject ${_visible ? 'visible' : ''}` }>
-            <div className = { `subject-info-container${_fullWidth ? ' subject-info-container--full-width' : ''}` }>
+        <div className={`subject ${_visible ? 'visible' : ''}`}>
+            <div className={`subject-info-container${_fullWidth ? ' subject-info-container--full-width' : ''}`}>
                 {
                     !_hideConferenceNameAndTimer
-                        && <div className = 'subject-info'>
-                            { _subject && <span className = 'subject-text'>{ _subject }</span>}
-                            { !_hideConferenceTimer && <ConferenceTimer /> }
-                        </div>
+                    && <div className='subject-info'>
+                        {_subject && <span className='subject-text'>{_subject}</span>}
+                        {!_hideConferenceTimer && <ConferenceTimer />}
+                    </div>
                 }
-                { _showParticipantCount && <ParticipantsCount /> }
+                {/* { _showParticipantCount && <ParticipantsCount /> } */}
                 <E2EELabel />
-                <RecordingLabel mode = { JitsiRecordingConstants.mode.FILE } />
-                <RecordingLabel mode = { JitsiRecordingConstants.mode.STREAM } />
+                <RecordingLabel mode={JitsiRecordingConstants.mode.FILE} />
+                <RecordingLabel mode={JitsiRecordingConstants.mode.STREAM} />
                 <LocalRecordingLabel />
                 <TranscribingLabel />
                 <VideoQualityLabel />
