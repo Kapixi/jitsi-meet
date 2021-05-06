@@ -148,6 +148,7 @@ class Filmstrip extends Component<Props> {
     render() {
         const filmstripStyle = {};
         const filmstripRemoteVideosContainerStyle = {};
+        const filmstripRemoteVideosStyles = {};
         let remoteVideoContainerClassName = 'remote-videos-container';
         const { _currentLayout, _participants } = this.props;
         const remoteParticipants = _participants.filter(p => !p.local);
@@ -168,7 +169,11 @@ class Filmstrip extends Component<Props> {
                     remoteVideoContainerClassName += ' has-overflow';
                 }
 
+                filmstripRemoteVideosStyles.overflowX = 'scroll';
                 filmstripRemoteVideosContainerStyle.width = _filmstripWidth;
+                filmstripRemoteVideosContainerStyle.flexFlow = 'wrap-reverse';
+                filmstripRemoteVideosContainerStyle.flexDirection = 'row-reverse';
+
                 break;
             }
         }
@@ -205,6 +210,7 @@ class Filmstrip extends Component<Props> {
                         </div>
                     </div>
                     <div
+                        style={filmstripRemoteVideosStyles}
                         className={remoteVideosWrapperClassName}
                         id='filmstripRemoteVideos'>
                         {/*
@@ -217,7 +223,7 @@ class Filmstrip extends Component<Props> {
                             id='filmstripRemoteVideosContainer'
                             style={filmstripRemoteVideosContainerStyle}>
                             {
-                                remoteParticipants.map(
+                                remoteParticipants.slice(0).reverse().map(
                                     p => (
                                         <Thumbnail
                                             key={`remote_${p.id}`}
