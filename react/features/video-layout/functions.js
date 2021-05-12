@@ -95,7 +95,7 @@ export function getTileViewGridDimensions(state: Object) {
         visibleRows = 2;
     }
     else {
-        columns = Math.ceil(numberOfParticipants / 3)
+        columns = 5
         visibleRows = 3;
     }
 

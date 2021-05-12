@@ -35,12 +35,12 @@ export function setTileViewDimensions(dimensions: Object, windowSize: Object, st
         disableResponsiveTiles
     });
     let filmstripWidth;
-    if (dimensions.visibleRows < 3) {
+    // if (dimensions.visibleRows < 3) {
         filmstripWidth = dimensions.columns * (thumbnailSize.width);
-    }
-    else {
-        filmstripWidth = dimensions.columns * (60 + thumbnailSize.width);
-    }
+    // }
+    // else {
+    //     filmstripWidth = dimensions.columns * (60 + thumbnailSize.width);
+    // }
 
     return {
         type: SET_TILE_VIEW_DIMENSIONS,

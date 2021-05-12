@@ -172,8 +172,10 @@ class Filmstrip extends Component<Props> {
 
                 filmstripRemoteVideosStyles.overflowX = 'scroll';
                 filmstripRemoteVideosContainerStyle.width = _filmstripWidth;
-                filmstripRemoteVideosContainerStyle.flexFlow = 'wrap-reverse';
-                filmstripRemoteVideosContainerStyle.flexDirection = 'row-reverse';
+                if (remoteParticipants.length < 15) {
+                    filmstripRemoteVideosContainerStyle.flexFlow = 'wrap-reverse';
+                    filmstripRemoteVideosContainerStyle.flexDirection = 'row-reverse';
+                }
                 filmstripRemoteVideosContainerStyle.margin = 'auto';
                 break;
             }
@@ -223,8 +225,8 @@ class Filmstrip extends Component<Props> {
                             className={remoteVideoContainerClassName}
                             id='filmstripRemoteVideosContainer'
                             style={filmstripRemoteVideosContainerStyle}>
-                            {
-                                remoteParticipants.slice(0).reverse().map(
+                            {remoteParticipants.length < 15 &&
+                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active') ? -1 : 1).slice(0).reverse().map(
                                     p => (
                                         <Thumbnail
                                             key={`remote_${p.id}`}
@@ -238,6 +240,14 @@ class Filmstrip extends Component<Props> {
                                         participantID={localParticipant.id} />
                                 }
                             </div>
+                            {remoteParticipants.length >= 15 &&
+                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active') ? 1 : -1).map(
+                                    p => (
+                                        <Thumbnail
+                                            key={`remote_${p.id}`}
+                                            participantID={p.id} />
+                                    ))
+                            }
                         </div>
                     </div>
                 </div>
