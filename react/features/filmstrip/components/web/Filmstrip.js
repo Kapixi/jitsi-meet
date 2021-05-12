@@ -170,11 +170,14 @@ class Filmstrip extends Component<Props> {
                     remoteVideoContainerClassName += ' has-overflow';
                 }
 
-                filmstripRemoteVideosStyles.overflowX = 'scroll';
+                //filmstripRemoteVideosStyles.overflowX = 'scroll';
                 filmstripRemoteVideosContainerStyle.width = _filmstripWidth;
                 if (remoteParticipants.length < 15) {
                     filmstripRemoteVideosContainerStyle.flexFlow = 'wrap-reverse';
                     filmstripRemoteVideosContainerStyle.flexDirection = 'row-reverse';
+                }
+                else {
+                    filmstripRemoteVideosStyles.padding = '75px 0';
                 }
                 filmstripRemoteVideosContainerStyle.margin = 'auto';
                 break;
