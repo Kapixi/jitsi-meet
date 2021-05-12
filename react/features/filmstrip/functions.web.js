@@ -156,16 +156,16 @@ export function calculateThumbnailSizeForTileView({
     const rowHeight = Math.floor(viewHeight / visibleRows);
     const initColumnWidth = Math.floor(viewWidth / columns);
     let columnWidth, width, height;
-    if (visibleRows < 3) {
+   // if (visibleRows < 3) {
         columnWidth = initColumnWidth > 460 ? 460 : initColumnWidth;
         width = columnWidth < rowHeight + 60 ? columnWidth : rowHeight + 60;
         height = width - 60;
-    }
-    else {
-        columnWidth = initColumnWidth > 400 ? 400 : initColumnWidth < 200 ? 200 : initColumnWidth;
-        width = columnWidth < rowHeight ? columnWidth : rowHeight;
-        height = width;
-    }
+  //  }
+    // else {
+    //     columnWidth = initColumnWidth > 400 ? 400 : initColumnWidth < 200 ? 200 : initColumnWidth;
+    //     width = columnWidth < rowHeight ? columnWidth : rowHeight;
+    //     height = width;
+    // }
 
     return {
         height,
