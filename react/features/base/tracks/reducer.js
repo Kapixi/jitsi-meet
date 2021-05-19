@@ -52,62 +52,64 @@ import {
  */
 function track(state, action) {
     switch (action.type) {
-    case PARTICIPANT_ID_CHANGED:
-        if (state.participantId === action.oldValue) {
-            return {
-                ...state,
-                participantId: action.newValue
-            };
+        case PARTICIPANT_ID_CHANGED:
+            if (state.participantId === action.oldValue) {
+                return {
+                    ...state,
+                    participantId: action.newValue
+                };
+            }
+            break;
+
+        case TRACK_UPDATED: {
+            const t = action.track;
+
+            if (state.jitsiTrack === t.jitsiTrack) {
+                // Make sure that there's an actual update in order to reduce the
+                // risk of unnecessary React Component renders.
+                APP.API.notifyRemoteMutedStatusChanged(t.muted, t.jitsiTrack.type, t.jitsiTrack.ownerEndpointId);
+
+                for (const p in t) {
+                    if (state[p] !== t[p]) {
+                        // There's an actual update.
+                        return {
+                            ...state,
+                            ...t
+                        };
+                    }
+                }
+            }
+            break;
         }
-        break;
+        case TRACK_UPDATE_LAST_VIDEO_MEDIA_EVENT: {
+            const t = action.track;
 
-    case TRACK_UPDATED: {
-        const t = action.track;
+            if (state.jitsiTrack === t) {
+                if (state.lastMediaEvent !== action.name) {
 
-        if (state.jitsiTrack === t.jitsiTrack) {
-            // Make sure that there's an actual update in order to reduce the
-            // risk of unnecessary React Component renders.
-            for (const p in t) {
-                if (state[p] !== t[p]) {
-                    // There's an actual update.
                     return {
                         ...state,
-                        ...t
+                        lastMediaEvent: action.name
                     };
                 }
             }
+            break;
         }
-        break;
-    }
-    case TRACK_UPDATE_LAST_VIDEO_MEDIA_EVENT: {
-        const t = action.track;
+        case TRACK_NO_DATA_FROM_SOURCE: {
+            const t = action.track;
 
-        if (state.jitsiTrack === t) {
-            if (state.lastMediaEvent !== action.name) {
+            if (state.jitsiTrack === t.jitsiTrack) {
+                const isReceivingData = t.jitsiTrack.isReceivingData();
 
-                return {
-                    ...state,
-                    lastMediaEvent: action.name
-                };
+                if (state.isReceivingData !== isReceivingData) {
+                    return {
+                        ...state,
+                        isReceivingData
+                    };
+                }
             }
+            break;
         }
-        break;
-    }
-    case TRACK_NO_DATA_FROM_SOURCE: {
-        const t = action.track;
-
-        if (state.jitsiTrack === t.jitsiTrack) {
-            const isReceivingData = t.jitsiTrack.isReceivingData();
-
-            if (state.isReceivingData !== isReceivingData) {
-                return {
-                    ...state,
-                    isReceivingData
-                };
-            }
-        }
-        break;
-    }
     }
 
     return state;
@@ -118,37 +120,38 @@ function track(state, action) {
  */
 ReducerRegistry.register('features/base/tracks', (state = [], action) => {
     switch (action.type) {
-    case PARTICIPANT_ID_CHANGED:
-    case TRACK_NO_DATA_FROM_SOURCE:
-    case TRACK_UPDATE_LAST_VIDEO_MEDIA_EVENT:
-    case TRACK_UPDATED:
-        return state.map(t => track(t, action));
+        case PARTICIPANT_ID_CHANGED:
+        case TRACK_NO_DATA_FROM_SOURCE:
+        case TRACK_UPDATE_LAST_VIDEO_MEDIA_EVENT:
+        case TRACK_UPDATED:
 
-    case TRACK_ADDED: {
-        let withoutTrackStub = state;
+            return state.map(t => track(t, action));
 
-        if (action.track.local) {
-            withoutTrackStub
-                = state.filter(
-                    t => !t.local || t.mediaType !== action.track.mediaType);
+        case TRACK_ADDED: {
+            let withoutTrackStub = state;
+
+            if (action.track.local) {
+                withoutTrackStub
+                    = state.filter(
+                        t => !t.local || t.mediaType !== action.track.mediaType);
+            }
+
+            return [...withoutTrackStub, action.track];
         }
 
-        return [ ...withoutTrackStub, action.track ];
-    }
+        case TRACK_CREATE_CANCELED:
+        case TRACK_CREATE_ERROR: {
+            return state.filter(t => !t.local || t.mediaType !== action.trackType);
+        }
 
-    case TRACK_CREATE_CANCELED:
-    case TRACK_CREATE_ERROR: {
-        return state.filter(t => !t.local || t.mediaType !== action.trackType);
-    }
+        case TRACK_REMOVED:
+            return state.filter(t => t.jitsiTrack !== action.track.jitsiTrack);
 
-    case TRACK_REMOVED:
-        return state.filter(t => t.jitsiTrack !== action.track.jitsiTrack);
+        case TRACK_WILL_CREATE:
+            return [...state, action.track];
 
-    case TRACK_WILL_CREATE:
-        return [ ...state, action.track ];
-
-    default:
-        return state;
+        default:
+            return state;
     }
 });
 
@@ -157,11 +160,11 @@ ReducerRegistry.register('features/base/tracks', (state = [], action) => {
  */
 ReducerRegistry.register('features/base/no-src-data', (state = {}, action) => {
     switch (action.type) {
-    case SET_NO_SRC_DATA_NOTIFICATION_UID:
-        return set(state, 'noSrcDataNotificationUid', action.uid);
+        case SET_NO_SRC_DATA_NOTIFICATION_UID:
+            return set(state, 'noSrcDataNotificationUid', action.uid);
 
-    default:
-        return state;
+        default:
+            return state;
     }
 });
 

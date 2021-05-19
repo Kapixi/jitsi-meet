@@ -51,6 +51,7 @@ const commands = {
     subject: 'subject',
     submitFeedback: 'submit-feedback',
     toggleAudio: 'toggle-audio',
+    muteRemoteAudio: 'mute-remote-audio',
     toggleCamera: 'toggle-camera',
     toggleCameraMirror: 'toggle-camera-mirror',
     toggleChat: 'toggle-chat',
@@ -62,6 +63,7 @@ const commands = {
     toggleTileView: 'toggle-tile-view',
     toggleFullscreen: 'toggle-fullscreen',
     toggleVideo: 'toggle-video',
+    disableRemoteVideo: 'disable-remote-video',
     toggleRaiseHand: 'toggle-raise-hand',
     showSettings: 'show-settings',
     setBackground: 'set-background'
@@ -75,6 +77,7 @@ const events = {
     'avatar-changed': 'avatarChanged',
     'audio-availability-changed': 'audioAvailabilityChanged',
     'audio-mute-status-changed': 'audioMuteStatusChanged',
+    'remote-mute-status-changed': 'remoteMuteStatusChanged',
     'camera-error': 'cameraError',
     'chat-updated': 'chatUpdated',
     'content-sharing-participants-changed': 'contentSharingParticipantsChanged',
