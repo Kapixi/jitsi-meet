@@ -18,6 +18,12 @@ import { LAYOUTS, getCurrentLayout } from '../../../video-layout';
 import { setFilmstripVisible } from '../../actions';
 import { shouldRemoteVideosBeVisible } from '../../functions';
 
+import {
+    isRemoteTrackMuted
+} from '../../../../features/base/tracks';
+
+import { MEDIA_TYPE } from '../../../../features/base/media';
+
 import Thumbnail from './Thumbnail';
 
 declare var APP: Object;
@@ -152,7 +158,15 @@ class Filmstrip extends Component<Props> {
         let remoteVideoContainerClassName = 'remote-videos-container';
         const { _currentLayout, _participants } = this.props;
         const remoteParticipants = _participants.filter(p => !p.local);
-        // console.log(remoteParticipants);
+        console.log(remoteParticipants);
+
+        const state = APP.store.getState();
+        const tracks = state['features/base/tracks'];
+
+        _participants.map(participant => {
+            participant.isVideoMuted = isRemoteTrackMuted(tracks, MEDIA_TYPE.VIDEO, participant.id);
+            participant.isAudioMuted = isRemoteTrackMuted(tracks, MEDIA_TYPE.AUDIO, participant.id);
+        })
         const localParticipant = getLocalParticipant(_participants);
         const tileViewActive = _currentLayout === LAYOUTS.TILE_VIEW;
 
@@ -170,11 +184,13 @@ class Filmstrip extends Component<Props> {
                     remoteVideoContainerClassName += ' has-overflow';
                 }
 
-                filmstripRemoteVideosStyles.overflowX = 'scroll';
                 filmstripRemoteVideosContainerStyle.width = _filmstripWidth;
                 if (remoteParticipants.length < 15) {
                     filmstripRemoteVideosContainerStyle.flexFlow = 'wrap-reverse';
                     filmstripRemoteVideosContainerStyle.flexDirection = 'row-reverse';
+                }
+                else {
+                    filmstripRemoteVideosStyles.padding = '75px 0';
                 }
                 filmstripRemoteVideosContainerStyle.margin = 'auto';
                 break;
@@ -226,7 +242,7 @@ class Filmstrip extends Component<Props> {
                             id='filmstripRemoteVideosContainer'
                             style={filmstripRemoteVideosContainerStyle}>
                             {remoteParticipants.length < 15 &&
-                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active') ? -1 : 1).slice(0).reverse().map(
+                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active' && !a.isVideoMuted && !a.isAudioMuted) ? -1 : 1).slice(0).reverse().map(
                                     p => (
                                         <Thumbnail
                                             key={`remote_${p.id}`}
@@ -241,7 +257,7 @@ class Filmstrip extends Component<Props> {
                                 }
                             </div>
                             {remoteParticipants.length >= 15 &&
-                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active') ? 1 : -1).map(
+                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active' && !a.isVideoMuted && !a.isAudioMuted) ? 1 : -1).map(
                                     p => (
                                         <Thumbnail
                                             key={`remote_${p.id}`}
