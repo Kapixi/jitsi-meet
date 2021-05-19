@@ -22,6 +22,7 @@ const ALWAYS_ON_TOP_FILENAMES = [
     'css/all.css', 'libs/alwaysontop.min.js'
 ];
 
+
 /**
  * Maps the names of the commands expected by the API with the name of the
  * commands expected by jitsi-meet
@@ -111,7 +112,8 @@ const events = {
     'subject-change': 'subjectChange',
     'suspend-detected': 'suspendDetected',
     'tile-view-changed': 'tileViewChanged',
-    'background-image-changed': 'backgroundImageChanged'
+    'background-image-changed': 'backgroundImageChanged',
+    'participant-mute-status-changed': 'participantMuteStatusChanged',
 };
 
 /**
@@ -498,6 +500,12 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                         = data.formattedDisplayName;
                     this._participants[userID].email
                         = data.email;
+                    this._participants[userID].audioMuted
+                        = data.audioMuted;
+                    this._participants[userID].videoMuted
+                        = data.videoMuted;
+
+
                     changeParticipantNumber(this, 1);
                     break;
                 }
@@ -514,6 +522,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                     }
                     break;
                 }
+
                 case 'email-change': {
                     const user = this._participants[userID];
 
@@ -530,6 +539,16 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                     }
                     break;
                 }
+                case 'participant-mute-status-changed':
+                    const user = this._participants[data.participantId];
+                    if (data.type == "video") {
+                        user.videoMuted
+                            = data.muted;
+                    } else if (data.type == "audio") {
+                        user.audioMuted
+                            = data.muted;
+                    }
+                    break;
                 case 'on-stage-participant-changed':
                     this._onStageParticipant = userID;
                     this.emit('largeVideoChanged');
@@ -800,6 +819,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
 
         return participantsInfo;
     }
+
 
     /**
      * Returns the current video quality setting.

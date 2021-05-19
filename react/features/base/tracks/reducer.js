@@ -67,11 +67,11 @@ function track(state, action) {
             if (state.jitsiTrack === t.jitsiTrack) {
                 // Make sure that there's an actual update in order to reduce the
                 // risk of unnecessary React Component renders.
-                APP.API.notifyRemoteMutedStatusChanged(t.muted, t.jitsiTrack.type, t.jitsiTrack.ownerEndpointId);
 
                 for (const p in t) {
                     if (state[p] !== t[p]) {
-                        // There's an actual update.
+                        const pId = t.jitsiTrack.ownerEndpointId ? t.jitsiTrack.ownerEndpointId : APP.conference.getMyUserId()
+                        APP.API.notifyRemoteMutedStatusChanged(t.muted, t.jitsiTrack.type, pId);
                         return {
                             ...state,
                             ...t
@@ -135,6 +135,9 @@ ReducerRegistry.register('features/base/tracks', (state = [], action) => {
                     = state.filter(
                         t => !t.local || t.mediaType !== action.track.mediaType);
             }
+            const t = action.track;
+            const pId = t.jitsiTrack.ownerEndpointId ? t.jitsiTrack.ownerEndpointId : APP.conference.getMyUserId()
+            APP.API.notifyRemoteMutedStatusChanged(t.muted, t.jitsiTrack.type, pId);
 
             return [...withoutTrackStub, action.track];
         }
@@ -145,6 +148,9 @@ ReducerRegistry.register('features/base/tracks', (state = [], action) => {
         }
 
         case TRACK_REMOVED:
+            const t = action.track;
+            const pId = t.jitsiTrack.ownerEndpointId ? t.jitsiTrack.ownerEndpointId : APP.conference.getMyUserId()
+            APP.API.notifyRemoteMutedStatusChanged(t.muted, t.jitsiTrack.type, pId);
             return state.filter(t => t.jitsiTrack !== action.track.jitsiTrack);
 
         case TRACK_WILL_CREATE:

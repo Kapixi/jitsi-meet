@@ -25,7 +25,7 @@ import {
     kickParticipant
 } from '../../react/features/base/participants';
 import { updateSettings } from '../../react/features/base/settings';
-import { isToggleCameraEnabled, toggleCamera } from '../../react/features/base/tracks';
+import { isToggleCameraEnabled, toggleCamera, isRemoteTrackMuted } from '../../react/features/base/tracks';
 import { setPrivateMessageRecipient } from '../../react/features/chat/actions';
 import { openChat } from '../../react/features/chat/actions.web';
 import {
@@ -755,9 +755,16 @@ class API {
      * @returns {void}
      */
     notifyUserJoined(id: string, props: Object) {
+        const state = APP.store.getState();
+        const tracks = state['features/base/tracks'];
+
         this._sendEvent({
             name: 'participant-joined',
             id,
+            audioMuted: isRemoteTrackMuted(
+                tracks, MEDIA_TYPE.AUDIO, id),
+            videoMuted: isRemoteTrackMuted(
+                tracks, MEDIA_TYPE.VIDEO, id),
             ...props
         });
     }
@@ -973,7 +980,13 @@ class API {
             name: 'remote-mute-status-changed',
             muted,
             type,
-            participantId
+            participantId,
+        });
+        this._sendEvent({
+            name: 'participant-mute-status-changed',
+            muted,
+            type,
+            participantId,
         });
     }
 
