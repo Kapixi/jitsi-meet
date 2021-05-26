@@ -13,7 +13,7 @@ import {
     setSubject
 } from '../../react/features/base/conference';
 import { overwriteConfig, getWhitelistedJSON } from '../../react/features/base/config';
-import { muteRemote } from '../../react/features/video-menu';
+import { muteRemote, muteAllParticipants } from '../../react/features/video-menu';
 import { parseJWTFromURLParams } from '../../react/features/base/jwt';
 import JitsiMeetJS, { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
 import { MEDIA_TYPE } from '../../react/features/base/media';
@@ -171,13 +171,22 @@ function initCommands() {
             logger.log('Remote audio toggle: API command received');
             APP.store.dispatch(muteRemote(participantID, MEDIA_TYPE.AUDIO));
         },
+        'mute-remote-audio-everyone-else': (participantID) => {
+            logger.log('Mute remote audio everyone else: API command received');
+            APP.store.dispatch(muteAllParticipants([participantID], MEDIA_TYPE.AUDIO));
+        },
         'toggle-video': () => {
             sendAnalytics(createApiEvent('toggle-video'));
             logger.log('Video toggle: API command received');
             APP.conference.toggleVideoMuted(false /* no UI */);
         },
         'disable-remote-video': (participantID) => {
+            logger.log('Remote audio toggle: API command received');
             APP.store.dispatch(muteRemote(participantID, MEDIA_TYPE.VIDEO));
+        },
+        'disable-remote-video-everyone-else': (participantID) => {
+            logger.log('Disable remote video everyone else: API command received');
+            APP.store.dispatch(muteAllParticipants([participantID], MEDIA_TYPE.VIDEO));
         },
         'toggle-film-strip': () => {
             sendAnalytics(createApiEvent('film.strip.toggled'));

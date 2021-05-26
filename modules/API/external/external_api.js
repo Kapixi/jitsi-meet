@@ -53,6 +53,7 @@ const commands = {
     submitFeedback: 'submit-feedback',
     toggleAudio: 'toggle-audio',
     muteRemoteAudio: 'mute-remote-audio',
+    muteRemoteAudioEveryoneElse: 'mute-remote-audio-everyone-else',
     toggleCamera: 'toggle-camera',
     toggleCameraMirror: 'toggle-camera-mirror',
     toggleChat: 'toggle-chat',
@@ -65,6 +66,7 @@ const commands = {
     toggleFullscreen: 'toggle-fullscreen',
     toggleVideo: 'toggle-video',
     disableRemoteVideo: 'disable-remote-video',
+    disableRemoteVideoEveryOneElse: 'disable-remote-video-everyone-else',
     toggleRaiseHand: 'toggle-raise-hand',
     showSettings: 'show-settings',
     setBackground: 'set-background'
