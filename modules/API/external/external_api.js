@@ -66,7 +66,7 @@ const commands = {
     toggleFullscreen: 'toggle-fullscreen',
     toggleVideo: 'toggle-video',
     disableRemoteVideo: 'disable-remote-video',
-    disableRemoteVideoEveryOneElse: 'disable-remote-video-everyone-else',
+    disableRemoteVideoEveryoneElse: 'disable-remote-video-everyone-else',
     toggleRaiseHand: 'toggle-raise-hand',
     showSettings: 'show-settings',
     setBackground: 'set-background'

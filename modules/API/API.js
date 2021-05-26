@@ -13,7 +13,6 @@ import {
     setSubject
 } from '../../react/features/base/conference';
 import { overwriteConfig, getWhitelistedJSON } from '../../react/features/base/config';
-import { muteRemote, muteAllParticipants } from '../../react/features/video-menu';
 import { parseJWTFromURLParams } from '../../react/features/base/jwt';
 import JitsiMeetJS, { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
 import { MEDIA_TYPE } from '../../react/features/base/media';
@@ -43,7 +42,7 @@ import { toggleLobbyMode } from '../../react/features/lobby/actions';
 import { RECORDING_TYPES } from '../../react/features/recording/constants';
 import { getActiveSession } from '../../react/features/recording/functions';
 import { toggleTileView, setTileView } from '../../react/features/video-layout';
-import { muteAllParticipants } from '../../react/features/video-menu/actions';
+import { muteAllParticipants, muteRemote } from '../../react/features/video-menu/actions';
 import { setVideoQuality } from '../../react/features/video-quality';
 import { getJitsiMeetTransport } from '../transport';
 import { SETTINGS_TABS } from '../../react/features/settings/constants';
