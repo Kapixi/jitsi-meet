@@ -500,10 +500,13 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                         = data.formattedDisplayName;
                     this._participants[userID].email
                         = data.email;
-                    this._participants[userID].audioMuted
-                        = data.audioMuted;
-                    this._participants[userID].videoMuted
-                        = data.videoMuted;
+                    if (this._participants[userID]) {
+                        this._participants[userID].audioMuted
+                            = data.audioMuted;
+                        this._participants[userID].videoMuted
+                            = data.videoMuted;
+                    }
+
 
 
                     changeParticipantNumber(this, 1);
@@ -541,12 +544,14 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                 }
                 case 'participant-mute-status-changed':
                     const user = this._participants[data.participantId];
-                    if (data.type == "video") {
-                        user.videoMuted
-                            = data.muted;
-                    } else if (data.type == "audio") {
-                        user.audioMuted
-                            = data.muted;
+                    if (user) {
+                        if (data.type == "video") {
+                            user.videoMuted
+                                = data.muted;
+                        } else if (data.type == "audio") {
+                            user.audioMuted
+                                = data.muted;
+                        }
                     }
                     break;
                 case 'on-stage-participant-changed':
