@@ -30,13 +30,12 @@ import { MEDIA_TYPE } from '../../base/media';
 import { SET_AUDIO_MUTED, SET_VIDEO_MUTED } from '../../base/media/actionTypes';
 import { PARTICIPANT_JOINED, PARTICIPANT_LEFT, getParticipants, getParticipantById } from '../../base/participants';
 import { MiddlewareRegistry, StateListenerRegistry } from '../../base/redux';
-import { toggleScreensharing } from '../../base/tracks';
+import { toggleScreensharing, isRemoteTrackMuted } from '../../base/tracks';
 import { OPEN_CHAT, CLOSE_CHAT } from '../../chat';
 import { openChat } from '../../chat/actions';
 import { sendMessage, setPrivateMessageRecipient, closeChat } from '../../chat/actions.any';
 import { muteLocal } from '../../video-menu/actions';
 import { ENTER_PICTURE_IN_PICTURE } from '../picture-in-picture';
-
 import { setParticipantsWithScreenShare } from './actions';
 import { sendEvent } from './functions';
 import logger from './logger';
@@ -90,134 +89,134 @@ MiddlewareRegistry.register(store => next => action => {
     const { type } = action;
 
     switch (type) {
-    case APP_WILL_MOUNT:
-        _registerForNativeEvents(store);
-        break;
-    case CONFERENCE_FAILED: {
-        const { error, ...data } = action;
+        case APP_WILL_MOUNT:
+            _registerForNativeEvents(store);
+            break;
+        case CONFERENCE_FAILED: {
+            const { error, ...data } = action;
 
-        // XXX Certain CONFERENCE_FAILED errors are recoverable i.e. they have
-        // prevented the user from joining a specific conference but the app may
-        // be able to eventually join the conference. For example, the app will
-        // ask the user for a password upon
-        // JitsiConferenceErrors.PASSWORD_REQUIRED and will retry joining the
-        // conference afterwards. Such errors are to not reach the native
-        // counterpart of the External API (or at least not in the
-        // fatality/finality semantics attributed to
-        // conferenceFailed:/onConferenceFailed).
-        if (!error.recoverable) {
-            _sendConferenceEvent(store, /* action */ {
-                error: _toErrorString(error),
-                ...data
-            });
+            // XXX Certain CONFERENCE_FAILED errors are recoverable i.e. they have
+            // prevented the user from joining a specific conference but the app may
+            // be able to eventually join the conference. For example, the app will
+            // ask the user for a password upon
+            // JitsiConferenceErrors.PASSWORD_REQUIRED and will retry joining the
+            // conference afterwards. Such errors are to not reach the native
+            // counterpart of the External API (or at least not in the
+            // fatality/finality semantics attributed to
+            // conferenceFailed:/onConferenceFailed).
+            if (!error.recoverable) {
+                _sendConferenceEvent(store, /* action */ {
+                    error: _toErrorString(error),
+                    ...data
+                });
+            }
+            break;
         }
-        break;
-    }
 
-    case CONFERENCE_LEFT:
-    case CONFERENCE_WILL_JOIN:
-        _sendConferenceEvent(store, action);
-        break;
+        case CONFERENCE_LEFT:
+        case CONFERENCE_WILL_JOIN:
+            _sendConferenceEvent(store, action);
+            break;
 
-    case CONFERENCE_JOINED:
-        _sendConferenceEvent(store, action);
-        _registerForEndpointTextMessages(store);
-        break;
+        case CONFERENCE_JOINED:
+            _sendConferenceEvent(store, action);
+            _registerForEndpointTextMessages(store);
+            break;
 
-    case CONNECTION_DISCONNECTED: {
-        // FIXME: This is a hack. See the description in the JITSI_CONNECTION_CONFERENCE_KEY constant definition.
-        // Check if this connection was attached to any conference. If it wasn't, fake a CONFERENCE_TERMINATED event.
-        const { connection } = action;
-        const conference = connection[JITSI_CONNECTION_CONFERENCE_KEY];
+        case CONNECTION_DISCONNECTED: {
+            // FIXME: This is a hack. See the description in the JITSI_CONNECTION_CONFERENCE_KEY constant definition.
+            // Check if this connection was attached to any conference. If it wasn't, fake a CONFERENCE_TERMINATED event.
+            const { connection } = action;
+            const conference = connection[JITSI_CONNECTION_CONFERENCE_KEY];
 
-        if (!conference) {
-            // This action will arrive late, so the locationURL stored on the state is no longer valid.
-            const locationURL = connection[JITSI_CONNECTION_URL_KEY];
+            if (!conference) {
+                // This action will arrive late, so the locationURL stored on the state is no longer valid.
+                const locationURL = connection[JITSI_CONNECTION_URL_KEY];
+
+                sendEvent(
+                    store,
+                    CONFERENCE_TERMINATED,
+                /* data */ {
+                        url: _normalizeUrl(locationURL)
+                    });
+            }
+
+            break;
+        }
+
+        case CONNECTION_FAILED:
+            !action.error.recoverable
+                && _sendConferenceFailedOnConnectionError(store, action);
+            break;
+
+        case ENTER_PICTURE_IN_PICTURE:
+            sendEvent(store, type, /* data */ {});
+            break;
+
+        case LOAD_CONFIG_ERROR: {
+            const { error, locationURL } = action;
 
             sendEvent(
                 store,
                 CONFERENCE_TERMINATED,
-                /* data */ {
+            /* data */ {
+                    error: _toErrorString(error),
                     url: _normalizeUrl(locationURL)
                 });
+            break;
         }
 
-        break;
-    }
-
-    case CONNECTION_FAILED:
-        !action.error.recoverable
-            && _sendConferenceFailedOnConnectionError(store, action);
-        break;
-
-    case ENTER_PICTURE_IN_PICTURE:
-        sendEvent(store, type, /* data */ {});
-        break;
-
-    case LOAD_CONFIG_ERROR: {
-        const { error, locationURL } = action;
-
-        sendEvent(
-            store,
-            CONFERENCE_TERMINATED,
+        case OPEN_CHAT:
+        case CLOSE_CHAT: {
+            sendEvent(
+                store,
+                CHAT_TOGGLED,
             /* data */ {
-                error: _toErrorString(error),
-                url: _normalizeUrl(locationURL)
-            });
-        break;
-    }
+                    isOpen: action.type === OPEN_CHAT
+                });
+            break;
+        }
 
-    case OPEN_CHAT:
-    case CLOSE_CHAT: {
-        sendEvent(
-            store,
-            CHAT_TOGGLED,
+        case PARTICIPANT_JOINED:
+        case PARTICIPANT_LEFT: {
+            const { participant } = action;
+
+            sendEvent(
+                store,
+                action.type,
             /* data */ {
-                isOpen: action.type === OPEN_CHAT
-            });
-        break;
-    }
+                    isLocal: participant.local,
+                    email: participant.email,
+                    name: participant.name,
+                    participantId: participant.id,
+                    displayName: participant.displayName,
+                    avatarUrl: participant.avatarURL,
+                    role: participant.role
+                });
+            break;
+        }
 
-    case PARTICIPANT_JOINED:
-    case PARTICIPANT_LEFT: {
-        const { participant } = action;
+        case SET_ROOM:
+            _maybeTriggerEarlyConferenceWillJoin(store, action);
+            break;
 
-        sendEvent(
-            store,
-            action.type,
+        case SET_AUDIO_MUTED:
+            sendEvent(
+                store,
+                'AUDIO_MUTED_CHANGED',
             /* data */ {
-                isLocal: participant.local,
-                email: participant.email,
-                name: participant.name,
-                participantId: participant.id,
-                displayName: participant.displayName,
-                avatarUrl: participant.avatarURL,
-                role: participant.role
-            });
-        break;
-    }
+                    muted: action.muted
+                });
+            break;
 
-    case SET_ROOM:
-        _maybeTriggerEarlyConferenceWillJoin(store, action);
-        break;
-
-    case SET_AUDIO_MUTED:
-        sendEvent(
-            store,
-            'AUDIO_MUTED_CHANGED',
+        case SET_VIDEO_MUTED:
+            sendEvent(
+                store,
+                'VIDEO_MUTED_CHANGED',
             /* data */ {
-                muted: action.muted
-            });
-        break;
-
-    case SET_VIDEO_MUTED:
-        sendEvent(
-            store,
-            'VIDEO_MUTED_CHANGED',
-            /* data */ {
-                muted: action.muted
-            });
-        break;
+                    muted: action.muted
+                });
+            break;
     }
 
     return result;
@@ -232,38 +231,38 @@ MiddlewareRegistry.register(store => next => action => {
 StateListenerRegistry.register(
     /* selector */ state => state['features/base/tracks'],
     /* listener */ debounce((tracks, store) => {
-        const oldScreenShares = store.getState()['features/mobile/external-api'].screenShares || [];
-        const newScreenShares = tracks
-            .filter(track => track.mediaType === 'video' && track.videoType === 'desktop')
-            .map(track => track.participantId);
+    const oldScreenShares = store.getState()['features/mobile/external-api'].screenShares || [];
+    const newScreenShares = tracks
+        .filter(track => track.mediaType === 'video' && track.videoType === 'desktop')
+        .map(track => track.participantId);
 
-        oldScreenShares.forEach(participantId => {
-            if (!newScreenShares.includes(participantId)) {
-                sendEvent(
-                    store,
-                    SCREEN_SHARE_TOGGLED,
+    oldScreenShares.forEach(participantId => {
+        if (!newScreenShares.includes(participantId)) {
+            sendEvent(
+                store,
+                SCREEN_SHARE_TOGGLED,
                     /* data */ {
-                        participantId,
-                        sharing: false
-                    });
-            }
-        });
+                    participantId,
+                    sharing: false
+                });
+        }
+    });
 
-        newScreenShares.forEach(participantId => {
-            if (!oldScreenShares.includes(participantId)) {
-                sendEvent(
-                    store,
-                    SCREEN_SHARE_TOGGLED,
+    newScreenShares.forEach(participantId => {
+        if (!oldScreenShares.includes(participantId)) {
+            sendEvent(
+                store,
+                SCREEN_SHARE_TOGGLED,
                     /* data */ {
-                        participantId,
-                        sharing: true
-                    });
-            }
-        });
+                    participantId,
+                    sharing: true
+                });
+        }
+    });
 
-        store.dispatch(setParticipantsWithScreenShare(newScreenShares));
+    store.dispatch(setParticipantsWithScreenShare(newScreenShares));
 
-    }, 100));
+}, 100));
 
 /**
  * Registers for events sent from the native side via NativeEventEmitter.
@@ -305,8 +304,9 @@ function _registerForNativeEvents(store) {
     });
 
     eventEmitter.addListener(ExternalAPI.RETRIEVE_PARTICIPANTS_INFO, ({ requestId }) => {
-
+        const tracks = getState()['features/base/tracks'];
         const participantsInfo = getParticipants(store).map(participant => {
+
             return {
                 isLocal: participant.local,
                 email: participant.email,
@@ -314,7 +314,11 @@ function _registerForNativeEvents(store) {
                 participantId: participant.id,
                 displayName: participant.displayName,
                 avatarUrl: participant.avatarURL,
-                role: participant.role
+                role: participant.role,
+                isAudioMuted: isRemoteTrackMuted(
+                    tracks, MEDIA_TYPE.AUDIO, participant.id),
+                isVideoMuted: isRemoteTrackMuted(
+                    tracks, MEDIA_TYPE.VIDEO, participant.id)
             };
         });
 
@@ -363,7 +367,7 @@ function _registerForEndpointTextMessages(store) {
         JitsiConferenceEvents.ENDPOINT_MESSAGE_RECEIVED,
         (...args) => {
             if (args && args.length >= 2) {
-                const [ sender, eventData ] = args;
+                const [sender, eventData] = args;
 
                 if (eventData.name === ENDPOINT_TEXT_MESSAGE_NAME) {
                     sendEvent(
@@ -379,32 +383,32 @@ function _registerForEndpointTextMessages(store) {
 
     conference.on(
         JitsiConferenceEvents.MESSAGE_RECEIVED,
-            (id, message, timestamp) => {
-                sendEvent(
-                    store,
-                    CHAT_MESSAGE_RECEIVED,
+        (id, message, timestamp) => {
+            sendEvent(
+                store,
+                CHAT_MESSAGE_RECEIVED,
                     /* data */ {
-                        senderId: id,
-                        message,
-                        isPrivate: false,
-                        timestamp
-                    });
-            }
+                    senderId: id,
+                    message,
+                    isPrivate: false,
+                    timestamp
+                });
+        }
     );
 
     conference.on(
         JitsiConferenceEvents.PRIVATE_MESSAGE_RECEIVED,
-            (id, message, timestamp) => {
-                sendEvent(
-                    store,
-                    CHAT_MESSAGE_RECEIVED,
+        (id, message, timestamp) => {
+            sendEvent(
+                store,
+                CHAT_MESSAGE_RECEIVED,
                     /* data */ {
-                        senderId: id,
-                        message,
-                        isPrivate: true,
-                        timestamp
-                    });
-            }
+                    senderId: id,
+                    message,
+                    isPrivate: true,
+                    timestamp
+                });
+        }
     );
 }
 
@@ -417,7 +421,7 @@ function _registerForEndpointTextMessages(store) {
  * {@code error}.
  */
 function _toErrorString(
-        error: Error | { message: ?string, name: ?string } | string) {
+    error: Error | { message: ?string, name: ?string } | string) {
     // XXX In lib-jitsi-meet and jitsi-meet we utilize errors in the form of
     // strings, Error instances, and plain objects which resemble Error.
     return (
@@ -473,12 +477,12 @@ function _normalizeUrl(url: URL) {
  * @returns {void}
  */
 function _sendConferenceEvent(
-        store: Object,
-        action: {
-            conference: Object,
-            type: string,
-            url: ?string
-        }) {
+    store: Object,
+    action: {
+        conference: Object,
+        type: string,
+        url: ?string
+    }) {
     const { conference, type, ...data } = action;
 
     // For these (redux) actions, conference identifies a JitsiConference
@@ -495,13 +499,13 @@ function _sendConferenceEvent(
     let type_;
 
     switch (type) {
-    case CONFERENCE_FAILED:
-    case CONFERENCE_LEFT:
-        type_ = CONFERENCE_TERMINATED;
-        break;
-    default:
-        type_ = type;
-        break;
+        case CONFERENCE_FAILED:
+        case CONFERENCE_LEFT:
+            type_ = CONFERENCE_TERMINATED;
+            break;
+        default:
+            type_ = type;
+            break;
     }
 
     sendEvent(store, type_, data);
@@ -529,12 +533,12 @@ function _sendConferenceFailedOnConnectionError(store, action) {
             // base/conference feature is supposed to emit a failure.
             conference => conference.getConnection() !== connection)
         && sendEvent(
-        store,
-        CONFERENCE_TERMINATED,
+            store,
+            CONFERENCE_TERMINATED,
         /* data */ {
-            url: _normalizeUrl(locationURL),
-            error: action.error.name
-        });
+                url: _normalizeUrl(locationURL),
+                error: action.error.name
+            });
 }
 
 /**
@@ -584,15 +588,15 @@ function _swallowConferenceLeft({ getState }, action, { url }) {
  */
 function _swallowEvent(store, action, data) {
     switch (action.type) {
-    case CONFERENCE_LEFT:
-        return _swallowConferenceLeft(store, action, data);
-    case CONFERENCE_WILL_JOIN:
-        // CONFERENCE_WILL_JOIN is dispatched to the external API on SET_ROOM,
-        // before the connection is created, so we need to swallow the original
-        // one emitted by base/conference.
-        return true;
+        case CONFERENCE_LEFT:
+            return _swallowConferenceLeft(store, action, data);
+        case CONFERENCE_WILL_JOIN:
+            // CONFERENCE_WILL_JOIN is dispatched to the external API on SET_ROOM,
+            // before the connection is created, so we need to swallow the original
+            // one emitted by base/conference.
+            return true;
 
-    default:
-        return false;
+        default:
+            return false;
     }
 }

@@ -13,7 +13,6 @@ import {
     setSubject
 } from '../../react/features/base/conference';
 import { overwriteConfig, getWhitelistedJSON } from '../../react/features/base/config';
-
 import { parseJWTFromURLParams } from '../../react/features/base/jwt';
 import JitsiMeetJS, { JitsiRecordingConstants } from '../../react/features/base/lib-jitsi-meet';
 import { MEDIA_TYPE } from '../../react/features/base/media';
@@ -25,7 +24,7 @@ import {
     kickParticipant
 } from '../../react/features/base/participants';
 import { updateSettings } from '../../react/features/base/settings';
-import { isToggleCameraEnabled, toggleCamera } from '../../react/features/base/tracks';
+import { isToggleCameraEnabled, toggleCamera, isRemoteTrackMuted } from '../../react/features/base/tracks';
 import { setPrivateMessageRecipient } from '../../react/features/chat/actions';
 import { openChat } from '../../react/features/chat/actions.web';
 import {
@@ -43,7 +42,7 @@ import { toggleLobbyMode } from '../../react/features/lobby/actions';
 import { RECORDING_TYPES } from '../../react/features/recording/constants';
 import { getActiveSession } from '../../react/features/recording/functions';
 import { toggleTileView, setTileView } from '../../react/features/video-layout';
-import { muteAllParticipants } from '../../react/features/video-menu/actions';
+import { muteAllParticipants, muteRemote } from '../../react/features/video-menu/actions';
 import { setVideoQuality } from '../../react/features/video-quality';
 import { getJitsiMeetTransport } from '../transport';
 import { SETTINGS_TABS } from '../../react/features/settings/constants';
@@ -167,10 +166,26 @@ function initCommands() {
             logger.log('Audio toggle: API command received');
             APP.conference.toggleAudioMuted(false /* no UI */);
         },
+        'mute-remote-audio': (participantID) => {
+            logger.log('Remote audio toggle: API command received');
+            APP.store.dispatch(muteRemote(participantID, MEDIA_TYPE.AUDIO));
+        },
+        'mute-remote-audio-everyone-else': (participantID) => {
+            logger.log('Mute remote audio everyone else: API command received');
+            APP.store.dispatch(muteAllParticipants([participantID], MEDIA_TYPE.AUDIO));
+        },
         'toggle-video': () => {
             sendAnalytics(createApiEvent('toggle-video'));
             logger.log('Video toggle: API command received');
             APP.conference.toggleVideoMuted(false /* no UI */);
+        },
+        'disable-remote-video': (participantID) => {
+            logger.log('Remote audio toggle: API command received');
+            APP.store.dispatch(muteRemote(participantID, MEDIA_TYPE.VIDEO));
+        },
+        'disable-remote-video-everyone-else': (participantID) => {
+            logger.log('Disable remote video everyone else: API command received');
+            APP.store.dispatch(muteAllParticipants([participantID], MEDIA_TYPE.VIDEO));
         },
         'toggle-film-strip': () => {
             sendAnalytics(createApiEvent('film.strip.toggled'));
@@ -748,9 +763,16 @@ class API {
      * @returns {void}
      */
     notifyUserJoined(id: string, props: Object) {
+        const state = APP.store.getState();
+        const tracks = state['features/base/tracks'];
+
         this._sendEvent({
             name: 'participant-joined',
             id,
+            audioMuted: isRemoteTrackMuted(
+                tracks, MEDIA_TYPE.AUDIO, id),
+            videoMuted: isRemoteTrackMuted(
+                tracks, MEDIA_TYPE.VIDEO, id),
             ...props
         });
     }
@@ -958,6 +980,21 @@ class API {
         this._sendEvent({
             name: 'audio-mute-status-changed',
             muted
+        });
+    }
+
+    notifyRemoteMutedStatusChanged(muted: boolean, type: string, participantId: string) {
+        this._sendEvent({
+            name: 'remote-mute-status-changed',
+            muted,
+            type,
+            participantId,
+        });
+        this._sendEvent({
+            name: 'participant-mute-status-changed',
+            muted,
+            type,
+            participantId,
         });
     }
 

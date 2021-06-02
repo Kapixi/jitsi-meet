@@ -158,7 +158,6 @@ class Filmstrip extends Component<Props> {
         let remoteVideoContainerClassName = 'remote-videos-container';
         const { _currentLayout, _participants } = this.props;
         const remoteParticipants = _participants.filter(p => !p.local);
-        console.log(remoteParticipants);
 
         const state = APP.store.getState();
         const tracks = state['features/base/tracks'];

@@ -22,6 +22,7 @@ const ALWAYS_ON_TOP_FILENAMES = [
     'css/all.css', 'libs/alwaysontop.min.js'
 ];
 
+
 /**
  * Maps the names of the commands expected by the API with the name of the
  * commands expected by jitsi-meet
@@ -51,6 +52,8 @@ const commands = {
     subject: 'subject',
     submitFeedback: 'submit-feedback',
     toggleAudio: 'toggle-audio',
+    muteRemoteAudio: 'mute-remote-audio',
+    muteRemoteAudioEveryoneElse: 'mute-remote-audio-everyone-else',
     toggleCamera: 'toggle-camera',
     toggleCameraMirror: 'toggle-camera-mirror',
     toggleChat: 'toggle-chat',
@@ -62,6 +65,8 @@ const commands = {
     toggleTileView: 'toggle-tile-view',
     toggleFullscreen: 'toggle-fullscreen',
     toggleVideo: 'toggle-video',
+    disableRemoteVideo: 'disable-remote-video',
+    disableRemoteVideoEveryoneElse: 'disable-remote-video-everyone-else',
     toggleRaiseHand: 'toggle-raise-hand',
     showSettings: 'show-settings',
     setBackground: 'set-background'
@@ -75,6 +80,7 @@ const events = {
     'avatar-changed': 'avatarChanged',
     'audio-availability-changed': 'audioAvailabilityChanged',
     'audio-mute-status-changed': 'audioMuteStatusChanged',
+    'remote-mute-status-changed': 'remoteMuteStatusChanged',
     'camera-error': 'cameraError',
     'chat-updated': 'chatUpdated',
     'content-sharing-participants-changed': 'contentSharingParticipantsChanged',
@@ -108,7 +114,8 @@ const events = {
     'subject-change': 'subjectChange',
     'suspend-detected': 'suspendDetected',
     'tile-view-changed': 'tileViewChanged',
-    'background-image-changed': 'backgroundImageChanged'
+    'background-image-changed': 'backgroundImageChanged',
+    'participant-mute-status-changed': 'participantMuteStatusChanged',
 };
 
 /**
@@ -495,6 +502,15 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                         = data.formattedDisplayName;
                     this._participants[userID].email
                         = data.email;
+                    if (this._participants[userID]) {
+                        this._participants[userID].audioMuted
+                            = data.audioMuted;
+                        this._participants[userID].videoMuted
+                            = data.videoMuted;
+                    }
+
+
+
                     changeParticipantNumber(this, 1);
                     break;
                 }
@@ -511,6 +527,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                     }
                     break;
                 }
+
                 case 'email-change': {
                     const user = this._participants[userID];
 
@@ -527,6 +544,18 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                     }
                     break;
                 }
+                case 'participant-mute-status-changed':
+                    const user = this._participants[data.participantId];
+                    if (user) {
+                        if (data.type == "video") {
+                            user.videoMuted
+                                = data.muted;
+                        } else if (data.type == "audio") {
+                            user.audioMuted
+                                = data.muted;
+                        }
+                    }
+                    break;
                 case 'on-stage-participant-changed':
                     this._onStageParticipant = userID;
                     this.emit('largeVideoChanged');
@@ -797,6 +826,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
 
         return participantsInfo;
     }
+
 
     /**
      * Returns the current video quality setting.
