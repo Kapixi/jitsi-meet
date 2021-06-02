@@ -242,7 +242,7 @@ class Filmstrip extends Component<Props> {
                             id='filmstripRemoteVideosContainer'
                             style={filmstripRemoteVideosContainerStyle}>
                             {remoteParticipants.length < 15 &&
-                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active' && !a.isVideoMuted && !a.isAudioMuted) ? -1 : 1).slice(0).reverse().map(
+                                remoteParticipants.slice(0).reverse().map(
                                     p => (
                                         <Thumbnail
                                             key={`remote_${p.id}`}
@@ -257,7 +257,7 @@ class Filmstrip extends Component<Props> {
                                 }
                             </div>
                             {remoteParticipants.length >= 15 &&
-                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active' && !a.isVideoMuted && !a.isAudioMuted) ? 1 : -1).map(
+                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active' && !a.isVideoMuted && !a.isAudioMuted) ? -1 : 1).map(
                                     p => (
                                         <Thumbnail
                                             key={`remote_${p.id}`}
