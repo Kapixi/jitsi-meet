@@ -14,7 +14,7 @@ import AbstractNotification, {
 } from '../AbstractNotification';
 
 declare var interfaceConfig: Object;
-
+declare var APP: Object;
 /**
  * Secondary colors for notification icons.
  *
@@ -82,7 +82,7 @@ class Notification extends AbstractNotification<Props> {
         // the id is used for testing the UI
         return (
             <div data-testid={this._getDescriptionKey()} >
-                { description}
+                {description}
             </div>
         );
     }
@@ -94,7 +94,10 @@ class Notification extends AbstractNotification<Props> {
      * @private
      */
     _onOpenSupportLink() {
-        window.open(interfaceConfig.SUPPORT_URL, '_blank', 'noopener');
+        if (typeof APP !== 'undefined') {
+            APP.API.notifyContactSupportClicked()
+        }
+        //window.open(interfaceConfig.SUPPORT_URL, '_blank', 'noopener');
     }
 
     /**

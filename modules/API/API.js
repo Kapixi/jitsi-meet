@@ -1042,6 +1042,14 @@ class API {
         });
     }
 
+
+    notifyContactSupportClicked() {
+
+        this._sendEvent({
+            name: 'contact-support-clicked'
+        });
+    }
+
     /**
      * Notify external application (if API is enabled) that the on stage
      * participant has changed.

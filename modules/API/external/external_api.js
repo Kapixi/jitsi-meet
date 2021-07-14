@@ -81,6 +81,7 @@ const events = {
     'audio-availability-changed': 'audioAvailabilityChanged',
     'audio-mute-status-changed': 'audioMuteStatusChanged',
     'remote-mute-status-changed': 'remoteMuteStatusChanged',
+    'contact-support-clicked': 'contactSupportClicked',
     'camera-error': 'cameraError',
     'chat-updated': 'chatUpdated',
     'content-sharing-participants-changed': 'contentSharingParticipantsChanged',

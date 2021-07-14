@@ -256,7 +256,7 @@ class Filmstrip extends Component<Props> {
                                 }
                             </div>
                             {remoteParticipants.length >= 15 &&
-                                remoteParticipants.sort((a, b) => (a.connectionStatus === 'active' && !a.isVideoMuted && !a.isAudioMuted) ? -1 : 1).map(
+                                remoteParticipants.map(
                                     p => (
                                         <Thumbnail
                                             key={`remote_${p.id}`}
